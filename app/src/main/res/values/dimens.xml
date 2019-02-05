@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- std -->
+    <dimen name="stdMargin">8dp</dimen>
+
+    <!-- Icon -->
+    <dimen name="smallIcon">50dp</dimen>
+    <dimen name="middleIcon">65dp</dimen>
+    <dimen name="bigIcon">80dp</dimen>
+    <dimen name="xIcon">105dp</dimen>
+    <dimen name="xxIcon">120dp</dimen>
+
+    <!-- Text -->
+    <dimen name="smallText">14sp</dimen>
+    <dimen name="middleText">16sp</dimen>
+    <dimen name="bigText">21sp</dimen>
+    <dimen name="xText">28sp</dimen>
+    <dimen name="xxText">36sp</dimen>
+
+    <!-- SelectFragment -->
+    <dimen name="widthAlbumCard">170dp</dimen>
+    <dimen name="heightAlbumCard">100dp</dimen>
+</resources>
