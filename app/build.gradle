@@ -28,6 +28,7 @@ ext {
     glideVersion = '4.8.0'
     androidXVersion = '1.0.0'
     tabLayoutVersion = '1.6.1'
+    rapidDecoderVersion = '0.3.0'
 }
 
 dependencies {
@@ -56,4 +57,9 @@ dependencies {
     // TabLayout
     implementation "com.ogaclejapan.smarttablayout:library:$tabLayoutVersion"
     implementation "com.ogaclejapan.smarttablayout:utils-v13:$tabLayoutVersion"
+
+    // Rapid Decoder
+    implementation "rapid.decoder:library:$rapidDecoderVersion"
+    implementation "rapid.decoder:jpeg-decoder:$rapidDecoderVersion"
+    implementation "rapid.decoder:png-decoder:$rapidDecoderVersion"
 }

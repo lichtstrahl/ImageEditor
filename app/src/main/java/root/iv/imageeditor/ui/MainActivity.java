@@ -1,28 +1,18 @@
 package root.iv.imageeditor.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.ViewGroup;
-
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v13.FragmentPagerItem;
-import com.ogaclejapan.smarttablayout.utils.v13.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v13.FragmentPagerItems;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import root.iv.imageeditor.R;
+import root.iv.imageeditor.ui.fragments.EditFragment;
 import root.iv.imageeditor.ui.fragments.SelectFragment;
 
-public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.mainFrame)
-    ViewGroup mainFrame;
-    @BindView(R.id.viewPager)
-    ViewPager viewPager;
-    @BindView(R.id.tabLayout)
-    SmartTabLayout tabLayout;
-    private FragmentPagerItemAdapter adapter;
+public class MainActivity extends AppCompatActivity implements SelectFragment.Listener {
+    private static final int POSITION_SELECT_FRAGMENT = 0;
+    private static final int POSITION_EDIT_FRAGMENT = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +20,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        FragmentPagerItems pages = new FragmentPagerItems(this);
-        pages.add(FragmentPagerItem.of("Поиск", SelectFragment.class));
-        adapter = new FragmentPagerItemAdapter(getFragmentManager(), pages);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainFrame, SelectFragment.getInstance())
+                .addToBackStack(null)
+                .commit();
 
-        viewPager.setAdapter(adapter);
-        tabLayout.setViewPager(viewPager);
+    }
+
+    @Override
+    public void openEditFragment(String bitmapPath) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainFrame, EditFragment.getInstance(bitmapPath))
+                .addToBackStack(null)
+                .commit();
     }
 }

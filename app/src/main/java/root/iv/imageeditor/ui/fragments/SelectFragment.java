@@ -1,18 +1,23 @@
 package root.iv.imageeditor.ui.fragments;
 
-import android.app.Fragment;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.LinkedList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.image.Album;
 import root.iv.imageeditor.image.AlbumAdapter;
@@ -27,6 +32,8 @@ public class SelectFragment extends Fragment {
     RecyclerView viewListImage;
     private AlbumAdapter albumAdapter;
     private ImageAdapter imageAdapter;
+    @Nullable
+    private Listener mainListener;
 
     @Nullable
     @Override
@@ -45,7 +52,7 @@ public class SelectFragment extends Fragment {
         return view;
     }
 
-    public static SelectFragment getInstance() {
+    public static Fragment getInstance() {
         SelectFragment fragment = new SelectFragment();
         return fragment;
     }
@@ -61,11 +68,36 @@ public class SelectFragment extends Fragment {
                 imageAdapter.append(image);
             }
         });
+
+        imageAdapter.subscribe(view -> {
+            int pos = viewListImage.getChildAdapterPosition(view);
+            Image image = imageAdapter.getItem(pos);
+            if (mainListener != null) {
+                mainListener.openEditFragment(image.getPhotoUri());
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mainListener = (Listener)context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mainListener = null;
     }
 
     @Override
     public void onStop() {
         super.onStop();
         albumAdapter.unsibscribe();
+        imageAdapter.unsibscribe();
+    }
+
+    public interface Listener {
+        void openEditFragment(String bitmapPath);
     }
 }
