@@ -20,4 +20,5 @@
     <!-- SelectFragment -->
     <dimen name="widthAlbumCard">170dp</dimen>
     <dimen name="heightAlbumCard">100dp</dimen>
+    <dimen name="main_head_height">48dp</dimen>
 </resources>

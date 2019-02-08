@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     android:id="@+id/mainFrame"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/frameHead"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_head_height">
+        <com.ogaclejapan.smarttablayout.SmartTabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+        </com.ogaclejapan.smarttablayout.SmartTabLayout>
+    </FrameLayout>
 
-</FrameLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/frameHead">
+
+    </androidx.viewpager.widget.ViewPager>
+
+</RelativeLayout>

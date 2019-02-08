@@ -27,6 +27,7 @@ ext {
     butterKnifeVersion = '10.0.0'
     glideVersion = '4.8.0'
     androidXVersion = '1.0.0'
+    tabLayoutVersion = '1.6.1'
 }
 
 dependencies {
@@ -51,4 +52,8 @@ dependencies {
 
     // CardView
     implementation "androidx.cardview:cardview:$androidXVersion"
+
+    // TabLayout
+    implementation "com.ogaclejapan.smarttablayout:library:$tabLayoutVersion"
+    implementation "com.ogaclejapan.smarttablayout:utils-v13:$tabLayoutVersion"
 }

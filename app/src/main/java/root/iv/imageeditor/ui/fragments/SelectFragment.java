@@ -1,15 +1,13 @@
 package root.iv.imageeditor.ui.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.LinkedList;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,10 +25,8 @@ public class SelectFragment extends Fragment {
     RecyclerView viewListAlbums;
     @BindView(R.id.viewListImage)
     RecyclerView viewListImage;
-
     private AlbumAdapter albumAdapter;
     private ImageAdapter imageAdapter;
-
 
     @Nullable
     @Override
@@ -38,13 +34,13 @@ public class SelectFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_select, container, false);
         ButterKnife.bind(this, view);
 
-        albumAdapter = new AlbumAdapter(ImagesLoader.getImageAlbums(this.getContext()), this.getLayoutInflater());
+        albumAdapter = new AlbumAdapter(ImagesLoader.getImageAlbums(this.getActivity()), this.getActivity().getLayoutInflater());
         viewListAlbums.setAdapter(albumAdapter);
-        viewListAlbums.setLayoutManager(new LinearLayoutManager(this.getContext(),RecyclerView.HORIZONTAL, false));
+        viewListAlbums.setLayoutManager(new LinearLayoutManager(this.getActivity(),RecyclerView.HORIZONTAL, false));
 
-        imageAdapter = new ImageAdapter(new LinkedList<>(), this.getLayoutInflater());
+        imageAdapter = new ImageAdapter(new LinkedList<>(), this.getActivity().getLayoutInflater());
         viewListImage.setAdapter(imageAdapter);
-        viewListImage.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+        viewListImage.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
 
         return view;
     }
