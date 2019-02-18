@@ -27,8 +27,7 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
         bottomNavigationView.setOnNavigationItemSelectedListener(this::bottomItemSelected);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.mainFrame, SelectFragment.getInstance())
-                .addToBackStack(null)
+                .replace(R.id.mainFrame, SelectFragment.getInstance(), SelectFragment.TAG)
                 .commit();
 
     }
@@ -41,10 +40,10 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
 
     private boolean bottomItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_main_bottom_search:
+            case R.id.menu_main_bottom_select:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.mainFrame, SelectFragment.getInstance())
+                        .replace(R.id.mainFrame, SelectFragment.getInstance(), SelectFragment.TAG)
                         .addToBackStack(null)
                         .commit();
                 return true;
@@ -52,11 +51,25 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
             case R.id.menu_main_bottom_edit:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.mainFrame, EditFragment.getInstance(bitmapPath))
+                        .replace(R.id.mainFrame, EditFragment.getInstance(bitmapPath), EditFragment.TAG)
                         .addToBackStack(null)
                         .commit();
                 return true;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if (count == 1) {
+            super.onBackPressed();
+        } else {
+            EditFragment fragment = (EditFragment)getSupportFragmentManager().findFragmentByTag(EditFragment.TAG);
+            if (fragment != null && fragment.isVisible()) {
+                getSupportFragmentManager().popBackStack();
+                bottomNavigationView.setSelectedItemId(R.id.menu_main_bottom_select);
+            }
+        }
     }
 }

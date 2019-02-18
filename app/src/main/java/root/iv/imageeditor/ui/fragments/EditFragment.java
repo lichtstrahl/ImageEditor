@@ -21,7 +21,6 @@ import root.iv.imageeditor.util.GlideApp;
 public class EditFragment extends Fragment {
     public static final String TAG = "EditFragment";
     private static final String ARG_BITMAP_PATH = "args:bitmap_path";
-    private static final String SAVE_EXIST_IMG = "save:exist_image";
     private static final String SAVE_IMG_PATH = "save:image_path";
     @BindView(R.id.preview)
     ImageView preview;
