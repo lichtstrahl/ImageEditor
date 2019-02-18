@@ -5,33 +5,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!-- Старый интерфейс -->
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp">
-        <FrameLayout
-            android:id="@+id/frameHead"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/main_head_height">
-            <com.ogaclejapan.smarttablayout.SmartTabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </com.ogaclejapan.smarttablayout.SmartTabLayout>
-        </FrameLayout>
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/frameHead">
-
-        </androidx.viewpager.widget.ViewPager>
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/mainFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigation"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_bottom_navigation_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+        app:menu="@menu/main_bottom_navigation"
+        app:itemIconTint="@color/selectors"
+        app:itemTextColor="@color/selectors">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 </RelativeLayout>

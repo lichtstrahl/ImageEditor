@@ -1,7 +1,6 @@
 package root.iv.imageeditor.ui.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.image.Album;
 import root.iv.imageeditor.image.AlbumAdapter;
@@ -26,6 +24,7 @@ import root.iv.imageeditor.image.ImageAdapter;
 import root.iv.imageeditor.util.ImagesLoader;
 
 public class SelectFragment extends Fragment {
+    public static final String TAG = "SelectFragment";
     @BindView(R.id.viewListAlbums)
     RecyclerView viewListAlbums;
     @BindView(R.id.viewListImage)

@@ -2,11 +2,14 @@ package root.iv.imageeditor.ui.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +21,7 @@ import root.iv.imageeditor.R;
 import root.iv.imageeditor.util.GlideApp;
 
 public class EditFragment extends Fragment {
+    public static final String TAG = "EditFragment";
     private static final String ARG_BITMAP_PATH = "args:bitmap_path";
     @BindView(R.id.preview)
     ImageView preview;
@@ -29,13 +33,17 @@ public class EditFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         Bundle args = getArguments();
-        if (args != null) {
-            GlideApp.with(this.getActivity())
-                    .load(parseArgs(args))
-                    .centerCrop()
+        if (args != null) { // Было передано изображение
+            GlideApp
+                    .with(this.getActivity())
+                    .load(new File(args.getString(ARG_BITMAP_PATH)))
+                    .into(preview);
+        } else {            // Не было изображения
+            GlideApp
+                    .with(this.getActivity())
+                    .load(R.drawable.ic_broken_image)
                     .into(preview);
         }
-
         return view;
     }
 
@@ -45,15 +53,18 @@ public class EditFragment extends Fragment {
     }
 
     private Bitmap parseArgs(@NonNull Bundle args) {
-        return BitmapDecoder.from(args.getString(ARG_BITMAP_PATH)).decode();
+        Bitmap bitmap =  BitmapDecoder.from(args.getString(ARG_BITMAP_PATH)).decode();
+
+        return bitmap;
     }
 
-    public static EditFragment getInstance(String bitmapPath) {
+    public static EditFragment getInstance(@Nullable String bitmapPath) {
         EditFragment fragment = new EditFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(ARG_BITMAP_PATH, bitmapPath);
-        fragment.setArguments(bundle);
-
+        if (bitmapPath != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ARG_BITMAP_PATH, bitmapPath);
+            fragment.setArguments(bundle);
+        }
         return fragment;
     }
 }
