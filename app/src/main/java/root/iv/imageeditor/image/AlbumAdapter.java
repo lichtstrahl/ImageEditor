@@ -59,7 +59,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
 
         public void bind(Album album) {
             viewName.setText(album.getName());
-            GlideApp.with(viewCover.getContext())
+            GlideApp.with(viewCover.getContext().getApplicationContext())
                     .load("file:" + album.getCoverUri())
                     .centerCrop()
                     .placeholder(new ColorDrawable(Color.WHITE))

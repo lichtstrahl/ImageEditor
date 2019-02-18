@@ -25,6 +25,8 @@ import root.iv.imageeditor.image.ImageAdapter;
 import root.iv.imageeditor.util.ImagesLoader;
 
 public class SelectFragment extends Fragment {
+    private static final String SAVE_POS_ALBUM_SELECTED = "save:pos-last-album-selected";
+    private static final int BAD_INDEX = -1;
     public static final String TAG = "SelectFragment";
     @BindView(R.id.viewListAlbums)
     RecyclerView viewListAlbums;
@@ -34,6 +36,7 @@ public class SelectFragment extends Fragment {
     private ImageAdapter imageAdapter;
     @Nullable
     private Listener mainListener;
+    private int lastAlbumSelected = BAD_INDEX;
 
     @Nullable
     @Override
@@ -49,6 +52,13 @@ public class SelectFragment extends Fragment {
         viewListImage.setAdapter(imageAdapter);
         viewListImage.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
 
+        if (savedInstanceState != null) {
+            int pos = savedInstanceState.getInt(SAVE_POS_ALBUM_SELECTED, BAD_INDEX);
+            if (pos != BAD_INDEX) {
+                loadImage(albumAdapter.getItem(pos));
+            }
+        }
+
         return view;
     }
 
@@ -62,11 +72,8 @@ public class SelectFragment extends Fragment {
         super.onStart();
         albumAdapter.subscribe(view -> {
             int pos = viewListAlbums.getChildAdapterPosition(view);
-            Album album = albumAdapter.getItem(pos);
-            imageAdapter.clear();
-            for (Image image : album.getImages()) {
-                imageAdapter.append(image);
-            }
+            lastAlbumSelected = pos;
+            loadImage(albumAdapter.getItem(pos));
         });
 
         imageAdapter.subscribe(view -> {
@@ -91,10 +98,24 @@ public class SelectFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVE_POS_ALBUM_SELECTED, lastAlbumSelected);
+        App.logI(TAG + " save");
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         albumAdapter.unsibscribe();
         imageAdapter.unsibscribe();
+    }
+
+    private void loadImage(Album album) {
+        imageAdapter.clear();
+        for (Image image : album.getImages()) {
+            imageAdapter.append(image);
+        }
     }
 
     public interface Listener {

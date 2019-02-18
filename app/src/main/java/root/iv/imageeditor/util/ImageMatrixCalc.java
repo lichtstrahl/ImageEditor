@@ -40,8 +40,6 @@ public class ImageMatrixCalc {
                 if (arr[m][n] > max) {
                     max = arr[m][n];
                 }
-                else {
-                }
             }
         }
         return max;
@@ -54,8 +52,6 @@ public class ImageMatrixCalc {
             for (int m = 0; m < width - 1; m++) {
                 if (arr[m][n] < min) {
                     min = arr[m][n];
-                }
-                else {
                 }
             }
         }

@@ -6,13 +6,18 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import root.iv.imageeditor.R;
+import root.iv.imageeditor.app.App;
 import root.iv.imageeditor.ui.fragments.EditFragment;
 import root.iv.imageeditor.ui.fragments.SelectFragment;
 
 public class MainActivity extends AppCompatActivity implements SelectFragment.Listener {
+    private static final String ADD_BACK_STACK_EDIT     = "backstack:edit";
+    private static final String ADD_BACK_STACK_SELECT   = "backstack:select";
+
     private String bitmapPath = null;
 
     @BindView(R.id.bottomNavigation)
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.mainFrame, SelectFragment.getInstance(), SelectFragment.TAG)
+                .addToBackStack(null)
                 .commit();
 
     }
@@ -39,37 +45,47 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
     }
 
     private boolean bottomItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_main_bottom_select:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.mainFrame, SelectFragment.getInstance(), SelectFragment.TAG)
-                        .addToBackStack(null)
-                        .commit();
-                return true;
+        int itemID = item.getItemId();
 
-            case R.id.menu_main_bottom_edit:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.mainFrame, EditFragment.getInstance(bitmapPath), EditFragment.TAG)
-                        .addToBackStack(null)
-                        .commit();
-                return true;
+        if (itemID != bottomNavigationView.getSelectedItemId()) {
+            switch (itemID) {
+                case R.id.menu_main_bottom_select:
+                    clearBackStack();
+                    App.logI("count after clear: " + getSupportFragmentManager().getBackStackEntryCount());
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.mainFrame, SelectFragment.getInstance(), SelectFragment.TAG)
+                            .addToBackStack(ADD_BACK_STACK_SELECT)
+                            .commit();
+                    break;
+
+                case R.id.menu_main_bottom_edit:
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.mainFrame, EditFragment.getInstance(bitmapPath), EditFragment.TAG)
+                            .addToBackStack(ADD_BACK_STACK_EDIT)
+                            .commit();
+                    break;
+                default:
+            }
         }
         return true;
     }
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count == 1) {
-            super.onBackPressed();
-        } else {
-            EditFragment fragment = (EditFragment)getSupportFragmentManager().findFragmentByTag(EditFragment.TAG);
-            if (fragment != null && fragment.isVisible()) {
-                getSupportFragmentManager().popBackStack();
-                bottomNavigationView.setSelectedItemId(R.id.menu_main_bottom_select);
-            }
+        App.logI("count: " + count);
+        if (count == 0) {   // Значит ушла последняя транзация
+            finish();
+        } else {            // Ушла транзакция Edit
+
+            bottomNavigationView.setSelectedItemId(R.id.menu_main_bottom_select);
         }
+    }
+
+    private void clearBackStack() {
+        while (getSupportFragmentManager().popBackStackImmediate());
     }
 }

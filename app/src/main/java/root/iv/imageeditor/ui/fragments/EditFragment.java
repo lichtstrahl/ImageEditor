@@ -37,13 +37,13 @@ public class EditFragment extends Fragment {
         if (args != null) { // Было передано изображение
             path = ARG_BITMAP_PATH;
             GlideApp
-                    .with(this.getActivity())
+                    .with(this.getActivity().getApplicationContext())
                     .load(new File(args.getString(ARG_BITMAP_PATH)))
                     .into(preview);
         } else {            // Не было изображения
             path = savedInstanceState != null ? savedInstanceState.getString(SAVE_IMG_PATH) : null;
             GlideApp
-                    .with(this.getActivity())
+                    .with(this.getActivity().getApplicationContext())
                     .load(path != null ? new File(path) : R.drawable.ic_broken_image)
                     .into(preview);
         }
@@ -60,6 +60,7 @@ public class EditFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVE_IMG_PATH, path);
+        App.logI(TAG + " save");
     }
 
     public static EditFragment getInstance(@Nullable String bitmapPath) {

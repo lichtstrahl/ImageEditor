@@ -89,7 +89,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder>
 
         public void bind(Image image) {
             GlideApp
-                    .with(viewImage.getContext())
+                    .with(viewImage.getContext().getApplicationContext())
                     .load("file:" + image.getPhotoUri())
                     .centerCrop()
                     .placeholder(new ColorDrawable(Color.WHITE))
