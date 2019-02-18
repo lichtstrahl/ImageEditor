@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import root.iv.imageeditor.R;
+import root.iv.imageeditor.app.App;
 import root.iv.imageeditor.image.Album;
 import root.iv.imageeditor.image.AlbumAdapter;
 import root.iv.imageeditor.image.Image;

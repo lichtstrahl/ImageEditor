@@ -1,8 +1,6 @@
 package root.iv.imageeditor.ui.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +14,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.R;
+import root.iv.imageeditor.app.App;
 import root.iv.imageeditor.util.GlideApp;
 
 public class EditFragment extends Fragment {
     public static final String TAG = "EditFragment";
     private static final String ARG_BITMAP_PATH = "args:bitmap_path";
+    private static final String SAVE_EXIST_IMG = "save:exist_image";
+    private static final String SAVE_IMG_PATH = "save:image_path";
     @BindView(R.id.preview)
     ImageView preview;
+    private String path;
 
     @Nullable
     @Override
@@ -33,15 +34,18 @@ public class EditFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         Bundle args = getArguments();
+        App.logI("Create edit: " + args);
         if (args != null) { // Было передано изображение
+            path = ARG_BITMAP_PATH;
             GlideApp
                     .with(this.getActivity())
                     .load(new File(args.getString(ARG_BITMAP_PATH)))
                     .into(preview);
         } else {            // Не было изображения
+            path = savedInstanceState != null ? savedInstanceState.getString(SAVE_IMG_PATH) : null;
             GlideApp
                     .with(this.getActivity())
-                    .load(R.drawable.ic_broken_image)
+                    .load(path != null ? new File(path) : R.drawable.ic_broken_image)
                     .into(preview);
         }
         return view;
@@ -52,10 +56,11 @@ public class EditFragment extends Fragment {
         super.onAttach(context);
     }
 
-    private Bitmap parseArgs(@NonNull Bundle args) {
-        Bitmap bitmap =  BitmapDecoder.from(args.getString(ARG_BITMAP_PATH)).decode();
 
-        return bitmap;
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVE_IMG_PATH, path);
     }
 
     public static EditFragment getInstance(@Nullable String bitmapPath) {
