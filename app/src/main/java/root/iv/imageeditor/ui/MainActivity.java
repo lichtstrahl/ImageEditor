@@ -50,13 +50,7 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
         if (itemID != bottomNavigationView.getSelectedItemId()) {
             switch (itemID) {
                 case R.id.menu_main_bottom_select:
-                    clearBackStack();
-                    App.logI("count after clear: " + getSupportFragmentManager().getBackStackEntryCount());
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.mainFrame, SelectFragment.getInstance(), SelectFragment.TAG)
-                            .addToBackStack(ADD_BACK_STACK_SELECT)
-                            .commit();
+                    if (getSupportFragmentManager().getBackStackEntryCount() > 1) getSupportFragmentManager().popBackStack();
                     break;
 
                 case R.id.menu_main_bottom_edit:
@@ -80,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
         if (count == 0) {   // Значит ушла последняя транзация
             finish();
         } else {            // Ушла транзакция Edit
-
             bottomNavigationView.setSelectedItemId(R.id.menu_main_bottom_select);
         }
     }

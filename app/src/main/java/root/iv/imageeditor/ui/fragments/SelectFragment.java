@@ -36,7 +36,6 @@ public class SelectFragment extends Fragment {
     private ImageAdapter imageAdapter;
     @Nullable
     private Listener mainListener;
-    private int lastAlbumSelected = BAD_INDEX;
 
     @Nullable
     @Override
@@ -52,8 +51,9 @@ public class SelectFragment extends Fragment {
         viewListImage.setAdapter(imageAdapter);
         viewListImage.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
 
-        if (savedInstanceState != null) {
-            int pos = savedInstanceState.getInt(SAVE_POS_ALBUM_SELECTED, BAD_INDEX);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            int pos = bundle.getInt(SAVE_POS_ALBUM_SELECTED, BAD_INDEX);
             if (pos != BAD_INDEX) {
                 loadImage(albumAdapter.getItem(pos));
             }
@@ -64,6 +64,8 @@ public class SelectFragment extends Fragment {
 
     public static Fragment getInstance() {
         SelectFragment fragment = new SelectFragment();
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -72,7 +74,7 @@ public class SelectFragment extends Fragment {
         super.onStart();
         albumAdapter.subscribe(view -> {
             int pos = viewListAlbums.getChildAdapterPosition(view);
-            lastAlbumSelected = pos;
+            getArguments().putInt(SAVE_POS_ALBUM_SELECTED, pos);
             loadImage(albumAdapter.getItem(pos));
         });
 
@@ -98,17 +100,12 @@ public class SelectFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(SAVE_POS_ALBUM_SELECTED, lastAlbumSelected);
-        App.logI(TAG + " save");
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         albumAdapter.unsibscribe();
         imageAdapter.unsibscribe();
+
+        App.logI(TAG + " stop");
     }
 
     private void loadImage(Album album) {
