@@ -1,6 +1,8 @@
 package root.iv.imageeditor.util;
 
-public class ImageHolder {
+import java.io.Serializable;
+
+public class ImageHolder implements Serializable {
     private double[][][] pixels;
 
     private ImageHolder(double[][][] pixels) {
@@ -36,18 +38,11 @@ public class ImageHolder {
         double fr_r[][] = new double[width][height];
         double fr_g[][] = new double[width][height];
         double fr_b[][] = new double[width][height];
-        double inten_new[][] = new double[width][height];
-
-        for (int k = 0; k < width - 1; k++) {
-            for (int a = 0; a < height - 1; a++) {
-                double int_k_a = inten[k][a];
-                inten_new[k][a] = ImageMatrixCalc.interp(imin, imax, imin, alpha * imax, int_k_a);
-            }
-        }
-
 
         for (int kk = 0; kk < width - 1; kk++) {
             for (int kkk = 0; kkk < height - 1; kkk++) {
+                double interp = ImageMatrixCalc.interp(imin, imax, imin, alpha * imax, inten[kk][kkk]);
+
                 if (inten[kk][kkk] > 0) {
                     fr_r[kk][kkk] = (pixels[kk][kkk][0]) / (inten[kk][kkk]);
                     fr_g[kk][kkk] = pixels[kk][kkk][1] / inten[kk][kkk];
@@ -58,15 +53,15 @@ public class ImageHolder {
                     fr_b[kk][kkk] = 1;
                 }
 
-                pixels[kk][kkk][0] = (int) Math.round(fr_r[kk][kkk] * inten_new[kk][kkk]);
+                pixels[kk][kkk][0] = (int) Math.round(fr_r[kk][kkk] * interp);
                 if (pixels[kk][kkk][0] > 255) {
                     pixels[kk][kkk][0] = 255;
                 }
-                pixels[kk][kkk][1] = (int) Math.round(fr_g[kk][kkk] * inten_new[kk][kkk]);
+                pixels[kk][kkk][1] = (int) Math.round(fr_g[kk][kkk] * interp);
                 if (pixels[kk][kkk][1] > 255) {
                     pixels[kk][kkk][1] = 255;
                 }
-                pixels[kk][kkk][2] = (int) Math.round(fr_b[kk][kkk] * inten_new[kk][kkk]);
+                pixels[kk][kkk][2] = (int) Math.round(fr_b[kk][kkk] * interp);
                 if (pixels[kk][kkk][2] > 255) {
                     pixels[kk][kkk][2] = 255;
                 }

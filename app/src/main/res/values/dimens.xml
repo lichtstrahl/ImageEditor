@@ -21,5 +21,9 @@
     <dimen name="widthAlbumCard">170dp</dimen>
     <dimen name="heightAlbumCard">100dp</dimen>
     <dimen name="main_head_height">48dp</dimen>
-    <dimen name="main_bottom_navigation_height">56dp</dimen>
+    <dimen name="main_navigation_height">56dp</dimen>
+    <dimen name="bottom_appbar_height">56dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="edit_bottom_navigation_height">85dp</dimen>
+    <dimen name="progress_size">48dp</dimen>
 </resources>

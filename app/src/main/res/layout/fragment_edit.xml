@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/preview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomCoordinator">
+        <ImageView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="@dimen/progress_size"
+            android:layout_height="@dimen/progress_size" />
+    </FrameLayout>
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/bottomCoordinator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_bottom_navigation_height"
+        android:layout_alignParentBottom="true">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonAction"
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            app:layout_anchor="@id/bottomAppBar"
+            android:backgroundTint="@android:color/white"
+            android:src="@drawable/ic_favorite"
+            />
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_appbar_height"
+            android:layout_gravity="bottom"
+            style="@style/Widget.MaterialComponents.BottomAppBar"
+            app:title="Заголовок"
+            app:titleTextColor="@color/colorPrimary"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:fabAlignmentMode="end" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package root.iv.imageeditor.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
                 .replace(R.id.mainFrame, SelectFragment.getInstance(), SelectFragment.TAG)
                 .addToBackStack(null)
                 .commit();
-
     }
 
     @Override
