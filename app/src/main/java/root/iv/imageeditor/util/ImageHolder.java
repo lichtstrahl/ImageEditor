@@ -1,6 +1,9 @@
 package root.iv.imageeditor.util;
 
 import java.io.Serializable;
+import java.util.concurrent.ThreadFactory;
+
+import root.iv.imageeditor.app.App;
 
 public class ImageHolder implements Serializable {
     public int [] pixels;
@@ -18,7 +21,8 @@ public class ImageHolder implements Serializable {
     }
 
     public ImageHolder brightness_segm(int width, int height, double alpha) {
-        int step = height/100;
+        App.logI("Thread: " + Thread.currentThread().getName());
+        int step = height;
         int i0 = 0;
         int j0 = 0;
         int lim_width = 0;

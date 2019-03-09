@@ -9,7 +9,7 @@ public class ImageMatrixCalc {
         return col;
     }
     public static int back_conversion(int r, int g, int b) {
-        int rgb = ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+        int rgb = (0xFF << 24) + ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
         return rgb;
     }
     public static int [] interp(int x1, int x2, int y1, int y2, double [] x_arr) {
