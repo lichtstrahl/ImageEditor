@@ -3,9 +3,9 @@ package root.iv.imageeditor.util;
 public class ImageMatrixCalc {
     public static int [] front_conversion(int rgb) {
         int [] col = new int [3];
-        col[2] = (int)(rgb & 255);
-        col[1] = (int)(rgb >> 8 & 255);
-        col[0] = (int)(rgb >> 16 & 255);
+        col[2] = (rgb & 255);
+        col[1] = (rgb >> 8 & 255);
+        col[0] = (rgb >> 16 & 255);
         return col;
     }
     public static int back_conversion(int r, int g, int b) {

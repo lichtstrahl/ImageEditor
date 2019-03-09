@@ -52,7 +52,7 @@ public class EditFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         if (holder != null) {
             holder.brightness(0.5)
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(workObserver);
         }

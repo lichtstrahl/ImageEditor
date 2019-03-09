@@ -38,12 +38,13 @@ public class ReactiveImageHolder implements Serializable {
     }
 
     public Single<Bitmap> brightness(double alpha) {
+        App.logI("Thread: " + Thread.currentThread().getName());
         holder.brightness_segm(width, height, alpha);
-        return Single.fromCallable(this::getCurrentBitmap);
+        return getCurrentBitmap();
     }
 
-    public Bitmap getCurrentBitmap() {
+    public Single<Bitmap> getCurrentBitmap() {
         int[] pixls = holder.getPixels();
-        return Bitmap.createBitmap(pixls, width, height, Bitmap.Config.ARGB_8888);
+        return Single.just(Bitmap.createBitmap(pixls, width, height, Bitmap.Config.ARGB_8888));
     }
 }

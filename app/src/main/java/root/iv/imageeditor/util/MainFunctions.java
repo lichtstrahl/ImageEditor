@@ -1,6 +1,8 @@
 package root.iv.imageeditor.util;
 
 
+import root.iv.imageeditor.app.App;
+
 public class MainFunctions {
     public static int [][][] brightness(int [][][] pixels, double alpha) {
 
@@ -18,26 +20,21 @@ public class MainFunctions {
         int imax = ImageMatrixCalc.find_max(inten);
         int imin = ImageMatrixCalc.find_min(inten);
 
-        double fr_r = 0;
-        double fr_g = 0;
-        double fr_b = 0;
+
 
         double imax1 = alpha * imax;
         for (int k = 0; k < width - 1; k++) {
             for (int a = 0; a < height - 1; a++) {
                 int inten_new = ImageMatrixCalc.interp(imin, imax, imin, imax1, inten[k][a]);
-                try {
-                    fr_r = (1.0 * pixels[k][a][0]) / inten[k][a];
-                    fr_g = (1.0 * pixels[k][a][1]) / inten[k][a];
-                    fr_b = (1.0 * pixels[k][a][2]) / inten[k][a];
-                } catch (Exception e) {
-                    fr_r = 1;
-                    fr_g = 1;
-                    fr_b = 1;
-                }
+
+                double fr_r = (inten[k][a] != 0) ? (1.0 * pixels[k][a][0]) / inten[k][a] : 1;
+                double fr_g = (inten[k][a] != 0) ? (1.0 * pixels[k][a][1]) / inten[k][a] : 1;
+                double fr_b = (inten[k][a] != 0) ? (1.0 * pixels[k][a][2]) / inten[k][a] : 1;
+
                 pixels[k][a][0] = (int) (fr_r * inten_new);
                 pixels[k][a][1] = (int) (fr_g * inten_new);
                 pixels[k][a][2] = (int) (fr_b * inten_new);
+
                 if (pixels[k][a][0] > 255) {
                     pixels[k][a][0] = 255;
                 }

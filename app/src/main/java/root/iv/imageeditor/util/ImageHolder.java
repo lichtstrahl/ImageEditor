@@ -22,57 +22,33 @@ public class ImageHolder implements Serializable {
 
     public ImageHolder brightness_segm(int width, int height, double alpha) {
         App.logI("Thread: " + Thread.currentThread().getName());
-        int step = height;
-        int i0 = 0;
-        int j0 = 0;
-        int lim_width = 0;
-        int lim_height = 0;
-        int i = 0;
-        int j = 0;
-        int i1 = 0;
-        int j1 = 0;
-        int pixels1 [][][] = new int [step][step][3];
-        while (i0 < width) {
-          while (j0 < height) {
-              if (i0 + step < width) {
-                  lim_width = i0 + step;
-              }
-              else {
-                  lim_width = width;
-              }
-              if (j0 + step < height) {
-                  lim_height = j0 + step;
-              }
-              else {
-                  lim_height = height;
-              }
-              i = i0;
-              while (i < lim_width) {
-                  j = j0;
-                  while (j < lim_height) {
+        int step = height+1;
+
+        int[][][] pixels1  = new int [step][step][3];
+        for (int i0 = 0; i0 < width; i0 += step - 1) {
+          for (int j0 = 0; j0 < height; j0 += step - 1) {
+
+              int lim_width = (i0 + step < width) ? i0+step : width;
+              int lim_height = (j0 + step < height) ? j0 + step : height;
+
+              for (int i = i0; i < lim_width; i++) {
+                  for (int j = j0; j < lim_height; j++) {
                       int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * j + i]);
                       pixels1[i-i0][j-j0][0] = rgb[0];
                       pixels1[i-i0][j-j0][1] = rgb[1];
                       pixels1[i-i0][j-j0][2] = rgb[2];
-                      j = j + 1;
                   }
-                  i = i + 1;
               }
               pixels1  = MainFunctions.brightness(pixels1, alpha);
-              i1 = 0;
-              while (i1 + i0 < lim_width) {
-                  j1 = 0;
-                  while (j1 + j0 < lim_height) {
+
+
+              for (int i1 = 0; i1 + i0 < lim_width; i1++) {
+                  for (int j1 = 0; j1 + j0 < lim_height; j1++) {
                       int rgb = ImageMatrixCalc.back_conversion(pixels1[i1][j1][0], pixels1[i1][j1][1], pixels1[i1][j1][2]);
                       pixels[(j1 + j0)*width + (i1 + i0)] = rgb;
-                      j1 = j1 + 1;
                   }
-                  i1 = i1 + 1;
               }
-              j0 = j0 + step - 1;
           }
-          j0 = 0;
-          i0 = i0 + step - 1;
         }
         return this;
     }
