@@ -2,61 +2,48 @@ package root.iv.imageeditor.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import io.reactivex.Single;
+import root.iv.imageeditor.app.App;
 
 public class ReactiveImageHolder implements Serializable {
-    private static final int POS_RED    = 0;
-    private static final int POS_GREEN  = 1;
-    private static final int POS_BLUE   = 2;
-    private static final int POS_ALPHA  = 3;
-
     private ImageHolder holder;
     private int width;
     private int height;
 
-    private ReactiveImageHolder(double[][][] pxs, int w, int h) {
+    private ReactiveImageHolder(int[] pxs, int w, int h) {
+
         holder = ImageHolder.getInstance(pxs);
         width = w;
         height = h;
     }
 
-    public static ReactiveImageHolder getInstance(@Nullable Bitmap bitmap) {
-        if (bitmap == null) throw new NullPointerException("Передан null как bitmap");
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        double[][][] pxs = new double[h][w][4];
+    public static ReactiveImageHolder getInstance(@Nullable Bitmap scaled) {
+        if (scaled == null) throw new NullPointerException("Передан null как bitmap");
+        int w = scaled.getWidth();
+        int h = scaled.getHeight();
 
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                int color = bitmap.getPixel(x,y);
-                pxs[y][x][POS_RED] = Color.red(color);
-                pxs[y][x][POS_GREEN] = Color.green(color);
-                pxs[y][x][POS_BLUE] = Color.blue(color);
-                pxs[y][x][POS_ALPHA] = Color.alpha(color);
-            }
-        }
+        App.logI(String.format(Locale.ENGLISH, "w,h: %d %d", w, h));
+        int[] pxs = new int[h*w];
+        scaled.getPixels(pxs,0, w, 0,0,w, h);
+
 
         return new ReactiveImageHolder(pxs, w, h);
     }
 
-    public Bitmap brightness(double alpha) {
-        holder.brightness(alpha);
-        return getCurrentBitmap();
+    public Single<Bitmap> brightness(double alpha) {
+        holder.brightness_segm(width, height, alpha);
+        return Single.fromCallable(this::getCurrentBitmap);
     }
 
     public Bitmap getCurrentBitmap() {
-        double[][][] pxs = holder.getPixels();
-
-        int[] colors = new int[width*height];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                colors[y*width + x] = Color.argb((int)pxs[y][x][POS_ALPHA], (int)pxs[y][x][POS_RED], (int)pxs[y][x][POS_GREEN], (int)pxs[y][x][POS_BLUE]);
-            }
-        }
-
-        return Bitmap.createBitmap(colors, width, height, Bitmap.Config.ARGB_8888);
+        int[] pixls = holder.getPixels();
+        return Bitmap.createBitmap(pixls, width, height, Bitmap.Config.ARGB_8888);
     }
 }

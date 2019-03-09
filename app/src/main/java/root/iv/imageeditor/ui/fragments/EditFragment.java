@@ -1,9 +1,7 @@
 package root.iv.imageeditor.ui.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,11 +19,11 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Scheduler;
+import rapid.decoder.BitmapDecoder;
+
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.app.App;
 import root.iv.imageeditor.util.GlideApp;
@@ -52,10 +50,12 @@ public class EditFragment extends Fragment {
     @OnClick(R.id.buttonAction)
     public void clickAction() {
         progressBar.setVisibility(View.VISIBLE);
-        Single.fromCallable(() -> holder.brightness(1.5))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(workObserver);
+        if (holder != null) {
+            holder.brightness(0.5)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(workObserver);
+        }
     }
 
     @Nullable
@@ -70,6 +70,7 @@ public class EditFragment extends Fragment {
             App.logI("Create edit: " + args);
             if (args != null) { // Было передано изображение
                 path = ARG_BITMAP_PATH;
+
                 Bitmap bitmap = BitmapDecoder.from(args.getString(ARG_BITMAP_PATH)).decode();
                 progressBar.setVisibility(View.VISIBLE);
                 Single.fromCallable(() -> ReactiveImageHolder.getInstance(bitmap))

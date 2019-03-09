@@ -3,175 +3,256 @@ package root.iv.imageeditor.util;
 import java.io.Serializable;
 
 public class ImageHolder implements Serializable {
-    private double[][][] pixels;
+    public int [] pixels;
 
-    private ImageHolder(double[][][] pixels) {
+    private ImageHolder(int [] pixels) {
         this.pixels = pixels;
     }
 
-    public static ImageHolder getInstance(double[][][] pixels) {
+    public static ImageHolder getInstance(int [] pixels) {
         return new ImageHolder(pixels);
     }
 
-    public double[][][] getPixels() {
+    public int [] getPixels() {
         return pixels;
     }
 
-    // alpha = {1;2}
-    public ImageHolder brightness(double alpha) {
-
-        int height = pixels[1].length;
-        int width = pixels.length;
-
-        // brightness/contrast block
-        double inten[][] = new double[width][height];
-        for (int ii = 0; ii < width; ii++) {
-            for (int jj = 0; jj < height; jj++) {
-                inten[ii][jj] = pixels[ii][jj][0] + pixels[ii][jj][1] + pixels[ii][jj][2];
-            }
+    public ImageHolder brightness_segm(int width, int height, double alpha) {
+        int step = height/100;
+        int i0 = 0;
+        int j0 = 0;
+        int lim_width = 0;
+        int lim_height = 0;
+        int i = 0;
+        int j = 0;
+        int i1 = 0;
+        int j1 = 0;
+        int pixels1 [][][] = new int [step][step][3];
+        while (i0 < width) {
+          while (j0 < height) {
+              if (i0 + step < width) {
+                  lim_width = i0 + step;
+              }
+              else {
+                  lim_width = width;
+              }
+              if (j0 + step < height) {
+                  lim_height = j0 + step;
+              }
+              else {
+                  lim_height = height;
+              }
+              i = i0;
+              while (i < lim_width) {
+                  j = j0;
+                  while (j < lim_height) {
+                      int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * j + i]);
+                      pixels1[i-i0][j-j0][0] = rgb[0];
+                      pixels1[i-i0][j-j0][1] = rgb[1];
+                      pixels1[i-i0][j-j0][2] = rgb[2];
+                      j = j + 1;
+                  }
+                  i = i + 1;
+              }
+              pixels1  = MainFunctions.brightness(pixels1, alpha);
+              i1 = 0;
+              while (i1 + i0 < lim_width) {
+                  j1 = 0;
+                  while (j1 + j0 < lim_height) {
+                      int rgb = ImageMatrixCalc.back_conversion(pixels1[i1][j1][0], pixels1[i1][j1][1], pixels1[i1][j1][2]);
+                      pixels[(j1 + j0)*width + (i1 + i0)] = rgb;
+                      j1 = j1 + 1;
+                  }
+                  i1 = i1 + 1;
+              }
+              j0 = j0 + step - 1;
+          }
+          j0 = 0;
+          i0 = i0 + step - 1;
         }
-
-        double imax = ImageMatrixCalc.find_max(inten);
-        double imin = ImageMatrixCalc.find_min(inten);
-
-
-        double fr_r[][] = new double[width][height];
-        double fr_g[][] = new double[width][height];
-        double fr_b[][] = new double[width][height];
-
-        for (int kk = 0; kk < width - 1; kk++) {
-            for (int kkk = 0; kkk < height - 1; kkk++) {
-                double interp = ImageMatrixCalc.interp(imin, imax, imin, alpha * imax, inten[kk][kkk]);
-
-                if (inten[kk][kkk] > 0) {
-                    fr_r[kk][kkk] = (pixels[kk][kkk][0]) / (inten[kk][kkk]);
-                    fr_g[kk][kkk] = pixels[kk][kkk][1] / inten[kk][kkk];
-                    fr_b[kk][kkk] = pixels[kk][kkk][2] / inten[kk][kkk];
-                } else {
-                    fr_r[kk][kkk] = 1;
-                    fr_g[kk][kkk] = 1;
-                    fr_b[kk][kkk] = 1;
-                }
-
-                pixels[kk][kkk][0] = (int) Math.round(fr_r[kk][kkk] * interp);
-                if (pixels[kk][kkk][0] > 255) {
-                    pixels[kk][kkk][0] = 255;
-                }
-                pixels[kk][kkk][1] = (int) Math.round(fr_g[kk][kkk] * interp);
-                if (pixels[kk][kkk][1] > 255) {
-                    pixels[kk][kkk][1] = 255;
-                }
-                pixels[kk][kkk][2] = (int) Math.round(fr_b[kk][kkk] * interp);
-                if (pixels[kk][kkk][2] > 255) {
-                    pixels[kk][kkk][2] = 255;
-                }
-            }
-        }
-
         return this;
     }
 
-    // alpha = {0;1}
-    public ImageHolder contrast(double alpha) {
-        int height = pixels[1].length;
-        int width = pixels.length;
+    public ImageHolder contrast_segm(int [] pixels, int width, int height, double alpha) {
+        int step = height/100;
+        int i0 = 0;
+        int j0 = 0;
+        int lim_width = 0;
+        int lim_height = 0;
+        int i = 0;
+        int j = 0;
+        int i1 = 0;
+        int j1 = 0;
+        int k = 0;
+        int kk = 0;
+        int [][] inten = new int [width][height];
 
-        // brightness/contrast block
-        double inten[][] = new double[width][height];
-        for (int ii = 0; ii < width; ii++) {
-            for (int jj = 0; jj < height; jj++) {
-                inten[ii][jj] = pixels[ii][jj][0] + pixels[ii][jj][1] + pixels[ii][jj][2];
+        while (k < width){
+            while (kk < height) {
+                int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * k + kk]);
+                inten[k][kk] = rgb[0] + rgb[1] + rgb[2];
+                kk = kk + 1;
             }
+            k = k + 1;
+            kk = 0;
         }
 
-        double imax = ImageMatrixCalc.find_max(inten);
-        double imin = ImageMatrixCalc.find_min(inten);
-        double range = imax - imin;
+        int imax = ImageMatrixCalc.find_max(inten);
+        int imin = ImageMatrixCalc.find_min(inten);
+        int range = imax - imin;
 
-
-        double [][]fr_r = new double[width][height];
-        double [][]fr_g = new double[width][height];
-        double [][]fr_b = new double[width][height];
-        double [][]inten_new = new double[width][height];
-
-        for (int k = 0; k < width - 1; k++) {
-            for (int a = 0; a < height - 1; a++) {
-                double int_k_a = inten[k][a];
-                inten_new[k][a] = ImageMatrixCalc.interp(imin, imax, imin + range*alpha/2, imax - range*alpha/2, int_k_a);
+        int pixels1 [][][] = new int [step][step][3];
+        while (i0 < width) {
+            while (j0 < height) {
+                if (i0 + step < width) {
+                    lim_width = i0 + step;
+                }
+                else {
+                    lim_width = width;
+                }
+                if (j0 + step < height) {
+                    lim_height = j0 + step;
+                }
+                else {
+                    lim_height = height;
+                }
+                i = i0;
+                while (i < lim_width) {
+                    j = j0;
+                    while (j < lim_height) {
+                        int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * i + j]);
+                        pixels1[i-i0][j-j0][0] = rgb[0];
+                        pixels1[i-i0][j-j0][1] = rgb[1];
+                        pixels1[i-i0][j-j0][2] = rgb[2];
+                        j = j + 1;
+                    }
+                    i = i + 1;
+                }
+                pixels1  = MainFunctions.contrast(pixels1, imax, imin, range, alpha);
+                i1 = 0;
+                while (i1 + i0 < lim_width) {
+                    j1 = 0;
+                    while (j1 + j0 < lim_height) {
+                        int rgb = ImageMatrixCalc.back_conversion(pixels1[i1][j1][0], pixels1[i1][j1][1], pixels1[i1][j1][2]);
+                        pixels[(i1 + i0)*width + (j1 + j0)] = rgb;
+                        j1 = j1 + 1;
+                    }
+                    i1 = i1 + 1;
+                }
+                j0 = j0 + step - 1;
             }
+            j0 = 0;
+            i0 = i0 + step - 1;
         }
-
-        for (int i = 0; i < width - 1; i++) {
-            for (int j = 0; j < height - 1; j++) {
-                if (inten[i][j] > 0) {
-                    fr_r[i][j] = (pixels[i][j][0]) / (inten[i][j]);
-                    fr_g[i][j] = pixels[i][j][1] / inten[i][j];
-                    fr_b[i][j] = pixels[i][j][2] / inten[i][j];
-                } else {
-                    fr_r[i][j] = 1;
-                    fr_g[i][j] = 1;
-                    fr_b[i][j] = 1;
-                }
-
-                pixels[i][j][0] = (int) Math.round(fr_r[i][j] * inten_new[i][j]);
-                if (pixels[i][j][0] > 255) {
-                    pixels[i][j][0] = 255;
-                }
-                if (pixels[i][j][0] < 0) {
-                    pixels[i][j][0] = 0;
-                }
-                pixels[i][j][1] = (int) Math.round(fr_g[i][j] * inten_new[i][j]);
-                if (pixels[i][j][1] > 255) {
-                    pixels[i][j][1] = 255;
-                }
-                if (pixels[i][j][1] < 0) {
-                    pixels[i][j][1] = 0;
-                }
-                pixels[i][j][2] = (int) Math.round(fr_b[i][j] * inten_new[i][j]);
-                if (pixels[i][j][2] > 255) {
-                    pixels[i][j][2] = 255;
-                }
-                if (pixels[i][j][2] < 0) {
-                    pixels[i][j][2] = 0;
-                }
-            }
-        }
-
         return this;
     }
 
-    // i is a resized image width, approx. 500 pix.
-    public ImageHolder resize(int i) {
-        // resize block
-        int height = pixels[1].length;
-        int width = pixels.length;
-        double [][][] pixels_copy = pixels;
+    // new_width is a resized image width, approx. 500 pix.
+    public ImageHolder resize(int [] pixels, int width, int height, int new_width) {
+        int new_height = new_width*height/width;
+
+        int[] i_num = new int [new_width];
+        for (int m = 0; m < new_width ; m++) {
+            i_num[m] = m;
+        }
+        int [] seq_width = ImageMatrixCalc.interp(0, new_width - 1, 0, width - 1, i_num);
+
+        int[] j_num = new int [new_height];
+        for (int n = 0; n < new_height ; n++) {
+            j_num[n] = n;
+        }
+        int [] seq_height = ImageMatrixCalc.interp(0, new_height - 1, 0, height - 1, j_num);
+
+        int pixels1 [] = new int [new_width*new_width + new_height];
+
+        int i = 0;
+        int j = 0;
+        while (i < new_width) {
+            while (j < new_height) {
+                pixels1[i*new_width + j] = pixels[width * seq_width[i] + seq_height[j]];
+                j = j + 1;
+            }
+            i = i + 1;
+            j = 0;
+        }
         pixels = null;
-        int j = i*height/width;
-        int[] i_num = new int [i];
-        int[] j_num = new int [j];
+        pixels = pixels1;
+        return this;
+    }
 
-        for (int ii = 0; ii < i ; ii++) {
-            i_num[ii] = ii;
+    public ImageHolder wbalance_segm(int [] pixels, int width, int height, double alpha) {
+        int r_comp = 0;
+        int g_comp = 0;
+        int b_comp = 0;
+        if (alpha <= 0) {
+            int b = 255;
+            int g = (int) (255 - 29 * (-alpha));
+            int r = (int) (255 - 54 * (-alpha));
+            b_comp = 255 - b;
+            g_comp = 255 - g;
+            r_comp = 255 - r;
         }
-
-        for (int jj = 0; jj < j ; jj++) {
-            j_num[jj] = jj;
+        else {
+            int b = (int) (251 - 54 * alpha);
+            //    G = 255 - 29*alpha;
+            int g = (int) (255 - 39 * alpha);
+            int r = 255;
+            b_comp = 251 - b;
+            g_comp = 255 - g;
+            r_comp = 255 - r;
         }
-
-        int [] seq_width = ImageMatrixCalc.interp(0, i - 1, 0, width - 1, i_num);
-        int [] seq_height = ImageMatrixCalc.interp(0, j - 1, 0, height - 1, j_num);
-
-
-        for (int m = 0; m < i ; m++) {
-            for (int n = 0; n < j ; n++) {
-                pixels[m][n][0] = (int) pixels_copy[seq_width[m]][seq_height[n]][0];
-                pixels[m][n][1] = (int) pixels_copy[seq_width[m]][seq_height[n]][1];
-                pixels[m][n][2] = (int) pixels_copy[seq_width[m]][seq_height[n]][2];
+        int step = height/100;
+        int i0 = 0;
+        int j0 = 0;
+        int lim_width = 0;
+        int lim_height = 0;
+        int i = 0;
+        int j = 0;
+        int i1 = 0;
+        int j1 = 0;
+        int pixels1 [][][] = new int [step][step][3];
+        while (i0 < width) {
+            while (j0 < height) {
+                if (i0 + step < width) {
+                    lim_width = i0 + step;
+                }
+                else {
+                    lim_width = width;
+                }
+                if (j0 + step < height) {
+                    lim_height = j0 + step;
+                }
+                else {
+                    lim_height = height;
+                }
+                i = i0;
+                while (i < lim_width) {
+                    j = j0;
+                    while (j < lim_height) {
+                        int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * i + j]);
+                        pixels1[i-i0][j-j0][0] = rgb[0];
+                        pixels1[i-i0][j-j0][1] = rgb[1];
+                        pixels1[i-i0][j-j0][2] = rgb[2];
+                        j = j + 1;
+                    }
+                    i = i + 1;
+                }
+                pixels1  = MainFunctions.wbalance(pixels1, r_comp, g_comp, b_comp, alpha);
+                i1 = 0;
+                while (i1 + i0 < lim_width) {
+                    j1 = 0;
+                    while (j1 + j0 < lim_height) {
+                        int rgb = ImageMatrixCalc.back_conversion(pixels1[i1][j1][0], pixels1[i1][j1][1], pixels1[i1][j1][2]);
+                        pixels[(i1 + i0)*width + (j1 + j0)] = rgb;
+                        j1 = j1 + 1;
+                    }
+                    i1 = i1 + 1;
+                }
+                j0 = j0 + step - 1;
             }
+            j0 = 0;
+            i0 = i0 + step - 1;
         }
         return this;
     }
 }
-
-
