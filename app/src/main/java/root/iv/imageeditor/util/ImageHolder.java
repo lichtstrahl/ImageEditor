@@ -1,9 +1,8 @@
 package root.iv.imageeditor.util;
 
-import java.io.Serializable;
-import java.util.concurrent.ThreadFactory;
+import android.graphics.Color;
 
-import root.iv.imageeditor.app.App;
+import java.io.Serializable;
 
 public class ImageHolder implements Serializable {
     public int [] pixels;
@@ -41,8 +40,7 @@ public class ImageHolder implements Serializable {
     private void backConversion(int[][][] pxs, int w, int h, int i0, int j0, int width) {
         for (int i1 = 0; i1 + i0 < w; i1++) {
             for (int j1 = 0; j1 + j0 < h; j1++) {
-                int rgb = ImageMatrixCalc.back_conversion(pxs[i1][j1][0], pxs[i1][j1][1], pxs[i1][j1][2]);
-                pixels[(j1 + j0)*width + (i1 + i0)] = rgb;
+                pixels[(j1 + j0)*width + (i1 + i0)] = Color.argb(0xFF, pxs[i1][j1][0], pxs[i1][j1][1], pxs[i1][j1][2]);
             }
         }
     }
@@ -50,10 +48,9 @@ public class ImageHolder implements Serializable {
     private void frontConversion(int[][][] pxs, int w, int h, int i0, int j0, int width) {
         for (int i = i0; i < w; i++) {
             for (int j = j0; j < h; j++) {
-                int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * j + i]);
-                pxs[i-i0][j-j0][0] = rgb[0];
-                pxs[i-i0][j-j0][1] = rgb[1];
-                pxs[i-i0][j-j0][2] = rgb[2];
+                pxs[i-i0][j-j0][0] = Color.red(pixels[width * j + i]);
+                pxs[i-i0][j-j0][1] = Color.green(pixels[width * j + i]);
+                pxs[i-i0][j-j0][2] = Color.blue(pixels[width * j + i]);
             }
         }
     }
