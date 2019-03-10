@@ -34,6 +34,7 @@ public class MainFunctions {
                     fr_g = 1;
                     fr_b = 1;
                 }
+
                 pixels[k][a][0] = (int) (fr_r * inten_new);
                 pixels[k][a][1] = (int) (fr_g * inten_new);
                 pixels[k][a][2] = (int) (fr_b * inten_new);
