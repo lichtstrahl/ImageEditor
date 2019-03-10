@@ -20,37 +20,42 @@ public class ImageHolder implements Serializable {
         return pixels;
     }
 
+
     public ImageHolder brightness_segm(int width, int height, double alpha) {
-        App.logI("Thread: " + Thread.currentThread().getName());
-        int step = height+1;
+        int step = height/5;
 
         int[][][] pixels1  = new int [step][step][3];
-        for (int i0 = 0; i0 < width; i0 += step - 1) {
-          for (int j0 = 0; j0 < height; j0 += step - 1) {
+        for (int i = 0; i < width; i += step - 1) {
+          for (int j = 0; j < height; j += step - 1) {
+              int limWidth = (i + step < width) ? i+step : width;
+              int limHeight = (j + step < height) ? j + step : height;
 
-              int lim_width = (i0 + step < width) ? i0+step : width;
-              int lim_height = (j0 + step < height) ? j0 + step : height;
-
-              for (int i = i0; i < lim_width; i++) {
-                  for (int j = j0; j < lim_height; j++) {
-                      int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * j + i]);
-                      pixels1[i-i0][j-j0][0] = rgb[0];
-                      pixels1[i-i0][j-j0][1] = rgb[1];
-                      pixels1[i-i0][j-j0][2] = rgb[2];
-                  }
-              }
-              pixels1  = MainFunctions.brightness(pixels1, alpha);
-
-
-              for (int i1 = 0; i1 + i0 < lim_width; i1++) {
-                  for (int j1 = 0; j1 + j0 < lim_height; j1++) {
-                      int rgb = ImageMatrixCalc.back_conversion(pixels1[i1][j1][0], pixels1[i1][j1][1], pixels1[i1][j1][2]);
-                      pixels[(j1 + j0)*width + (i1 + i0)] = rgb;
-                  }
-              }
+              frontConversion(pixels1, limWidth, limHeight, i, j, width);
+              MainFunctions.brightness(pixels1, alpha);
+              backConversion(pixels1, limWidth, limHeight, i, j, width);
           }
         }
         return this;
+    }
+
+    private void backConversion(int[][][] pxs, int w, int h, int i0, int j0, int width) {
+        for (int i1 = 0; i1 + i0 < w; i1++) {
+            for (int j1 = 0; j1 + j0 < h; j1++) {
+                int rgb = ImageMatrixCalc.back_conversion(pxs[i1][j1][0], pxs[i1][j1][1], pxs[i1][j1][2]);
+                pixels[(j1 + j0)*width + (i1 + i0)] = rgb;
+            }
+        }
+    }
+
+    private void frontConversion(int[][][] pxs, int w, int h, int i0, int j0, int width) {
+        for (int i = i0; i < w; i++) {
+            for (int j = j0; j < h; j++) {
+                int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * j + i]);
+                pxs[i-i0][j-j0][0] = rgb[0];
+                pxs[i-i0][j-j0][1] = rgb[1];
+                pxs[i-i0][j-j0][2] = rgb[2];
+            }
+        }
     }
 
     public ImageHolder contrast_segm(int [] pixels, int width, int height, double alpha) {

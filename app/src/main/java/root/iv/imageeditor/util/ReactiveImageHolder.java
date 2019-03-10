@@ -1,30 +1,35 @@
 package root.iv.imageeditor.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Matrix;
+import android.os.PowerManager;
+import android.text.format.DateUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import root.iv.imageeditor.app.App;
 
 public class ReactiveImageHolder implements Serializable {
+    private static final String WAKELOCK_TAG = "lock:image-holder";
     private ImageHolder holder;
     private int width;
     private int height;
+    private PowerManager.WakeLock lock;
 
-    private ReactiveImageHolder(int[] pxs, int w, int h) {
-
+    private ReactiveImageHolder(Context context, int[] pxs, int w, int h) {
         holder = ImageHolder.getInstance(pxs);
         width = w;
         height = h;
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        lock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKELOCK_TAG);
     }
 
-    public static ReactiveImageHolder getInstance(@Nullable Bitmap scaled) {
+    public static ReactiveImageHolder getInstance(Context context, @Nullable Bitmap scaled) {
         if (scaled == null) throw new NullPointerException("Передан null как bitmap");
         int w = scaled.getWidth();
         int h = scaled.getHeight();
@@ -34,17 +39,24 @@ public class ReactiveImageHolder implements Serializable {
         scaled.getPixels(pxs,0, w, 0,0,w, h);
 
 
-        return new ReactiveImageHolder(pxs, w, h);
+        return new ReactiveImageHolder(context, pxs, w, h);
     }
 
     public Single<Bitmap> brightness(double alpha) {
-        App.logI("Thread: " + Thread.currentThread().getName());
-        holder.brightness_segm(width, height, alpha);
-        return getCurrentBitmap();
+
+        Single<Bitmap> work = Single.fromCallable(() -> {
+                                    lock.acquire(10* DateUtils.SECOND_IN_MILLIS);
+                                    holder.brightness_segm(width, height, alpha);
+                                    return getCurrentBitmap();
+                                });
+        return work
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<Bitmap> getCurrentBitmap() {
+    public Bitmap getCurrentBitmap() {
         int[] pixls = holder.getPixels();
-        return Single.just(Bitmap.createBitmap(pixls, width, height, Bitmap.Config.ARGB_8888));
+        return Bitmap.createBitmap(pixls, width, height, Bitmap.Config.ARGB_8888);
     }
+
 }

@@ -1,8 +1,6 @@
 package root.iv.imageeditor.util;
 
 
-import root.iv.imageeditor.app.App;
-
 public class MainFunctions {
     public static int [][][] brightness(int [][][] pixels, double alpha) {
 
@@ -10,7 +8,7 @@ public class MainFunctions {
         int width = pixels.length;
 
         // brightness/contrast block
-        int inten[][] = new int [width][height];
+        int[][] inten = new int [width][height];
         for (int ii = 0; ii < width; ii++) {
             for (int jj = 0; jj < height; jj++) {
                 inten[ii][jj] = pixels[ii][jj][0] + pixels[ii][jj][1] + pixels[ii][jj][2];
@@ -19,7 +17,6 @@ public class MainFunctions {
 
         int imax = ImageMatrixCalc.find_max(inten);
         int imin = ImageMatrixCalc.find_min(inten);
-
 
 
         double imax1 = alpha * imax;
@@ -46,6 +43,7 @@ public class MainFunctions {
                 }
             }
         }
+
         return pixels;
     }
 

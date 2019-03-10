@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Scheduler;
 import rapid.decoder.BitmapDecoder;
 
 import io.reactivex.Single;
@@ -51,8 +52,9 @@ public class EditFragment extends Fragment {
     public void clickAction() {
         progressBar.setVisibility(View.VISIBLE);
         if (holder != null) {
+
             holder.brightness(0.5)
-                    .subscribeOn(Schedulers.computation())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(workObserver);
         }
@@ -73,7 +75,7 @@ public class EditFragment extends Fragment {
 
                 Bitmap bitmap = BitmapDecoder.from(args.getString(ARG_BITMAP_PATH)).decode();
                 progressBar.setVisibility(View.VISIBLE);
-                Single.fromCallable(() -> ReactiveImageHolder.getInstance(bitmap))
+                Single.fromCallable(() -> ReactiveImageHolder.getInstance(getContext(), bitmap))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(createHolderObserver);
