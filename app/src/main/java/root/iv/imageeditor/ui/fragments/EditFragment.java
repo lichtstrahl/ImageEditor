@@ -72,7 +72,7 @@ public class EditFragment extends Fragment {
 
                 Bitmap bitmap = BitmapDecoder.from(args.getString(ARG_BITMAP_PATH)).decode();
                 progressBar.setVisibility(View.VISIBLE);
-                Single.fromCallable(() -> ReactiveImageHolder.getInstance(getContext(), bitmap))
+                Single.fromCallable(() -> ReactiveImageHolder.getInstance(bitmap))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(createHolderObserver);
