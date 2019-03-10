@@ -41,7 +41,7 @@ public class ReactiveImageHolder implements Serializable {
     public Single<Bitmap> brightness(double alpha) {
 
         Single<Bitmap> work = Single.fromCallable(() -> {
-                                    ImageHolder.brightness_segm(pixels, width, height, alpha);
+                                    MainFunctions.brightness(pixels, width, height, alpha);
                                     return getCurrentBitmap();
                                 });
         return work
