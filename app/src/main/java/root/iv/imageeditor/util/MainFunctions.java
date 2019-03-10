@@ -9,24 +9,23 @@ public class MainFunctions {
 
     public static void brightness(int[] pxs, int width, int height, double alpha) {
 
-        // brightness/contrast block
-        int[][] inten = new int [height][width];
         int imax = sumRGB(pxs[0]);
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                inten[i][j] = sumRGB(pxs[i*width+j]);
-                if (imax < inten[i][j]) imax = inten[i][j];
+                int sum = sumRGB(pxs[i*width+j]);
+                if (imax < sum) imax = sum;
             }
         }
 
         double imax1 = alpha * imax;
         for (int i = 0; i < height - 1; i++) {
             for (int j = 0; j < width - 1; j++) {
-                int inten_new = ImageMatrixCalc.interp(0, imax, 0, imax1, inten[i][j]);
+                int inten = sumRGB(pxs[i*width+j]);
+                int inten_new = ImageMatrixCalc.interp(0, imax, 0, imax1, inten);
 
-                double frR = inten[i][j] != 0 ? (1.0 * Color.red(pxs[i*width + j]))     / inten[i][j] : 1;
-                double frG = inten[i][j] != 0 ? (1.0 * Color.green(pxs[i*width + j]))   / inten[i][j] : 1;
-                double frB = inten[i][j] != 0 ? (1.0 * Color.blue(pxs[i*width + j]))    / inten[i][j] : 1;
+                double frR = inten != 0 ? (1.0 * Color.red(pxs[i*width + j]))     / inten : 1;
+                double frG = inten != 0 ? (1.0 * Color.green(pxs[i*width + j]))   / inten : 1;
+                double frB = inten != 0 ? (1.0 * Color.blue(pxs[i*width + j]))    / inten : 1;
 
                 pxs[i*width + j] = Color.argb(0xFF, (int) (frR * inten_new), (int) (frG * inten_new), (int) (frB * inten_new) );
             }
