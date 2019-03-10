@@ -16,13 +16,13 @@ import root.iv.imageeditor.app.App;
 
 public class ReactiveImageHolder implements Serializable {
     private static final String WAKELOCK_TAG = "lock:image-holder";
-    private ImageHolder holder;
+    private int[] pixels;
     private int width;
     private int height;
     private PowerManager.WakeLock lock;
 
     private ReactiveImageHolder(Context context, int[] pxs, int w, int h) {
-        holder = ImageHolder.getInstance(pxs);
+        pixels = pxs;
         width = w;
         height = h;
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -46,7 +46,7 @@ public class ReactiveImageHolder implements Serializable {
 
         Single<Bitmap> work = Single.fromCallable(() -> {
                                     lock.acquire(10* DateUtils.SECOND_IN_MILLIS);
-                                    holder.brightness_segm(width, height, alpha);
+                                    ImageHolder.brightness_segm(pixels, width, height, alpha);
                                     return getCurrentBitmap();
                                 });
         return work
@@ -55,8 +55,8 @@ public class ReactiveImageHolder implements Serializable {
     }
 
     public Bitmap getCurrentBitmap() {
-        int[] pixls = holder.getPixels();
-        return Bitmap.createBitmap(pixls, width, height, Bitmap.Config.ARGB_8888);
+
+        return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
     }
 
 }

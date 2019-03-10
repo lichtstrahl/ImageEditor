@@ -1,15 +1,15 @@
 package root.iv.imageeditor.util;
-
 public class ImageMatrixCalc {
     public static int [] front_conversion(int rgb) {
         int [] col = new int [3];
-        col[2] = (rgb & 255);
-        col[1] = (rgb >> 8 & 255);
-        col[0] = (rgb >> 16 & 255);
+        col[2] = (int)(rgb & 255);
+        col[1] = (int)(rgb >> 8 & 255);
+        col[0] = (int)(rgb >> 16 & 255);
         return col;
     }
     public static int back_conversion(int r, int g, int b) {
-        return (0xFF << 24) + ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+        int rgb = ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+        return rgb;
     }
     public static int [] interp(int x1, int x2, int y1, int y2, double [] x_arr) {
         double y1d = y1;
@@ -34,7 +34,8 @@ public class ImageMatrixCalc {
     public static int interp(int x1, int x2, double y1, double y2, int x) {
         double k = (y2 - y1)/(x2 - x1);
         double c = y2 - k*x2;
-        return (int)(c + k*x);
+        int y_arr = (int)(c + k*x);
+        return y_arr;
     }
     public static int find_max(int [][] arr) {
         int max = 0;
@@ -62,6 +63,8 @@ public class ImageMatrixCalc {
                     max[0] = arr[m][n];
                     max[1] = m;
                     max[2] = n;
+                }
+                else {
                 }
             }
         }
