@@ -5,12 +5,18 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,23 +25,25 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Scheduler;
-import rapid.decoder.BitmapDecoder;
-
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.app.App;
+import root.iv.imageeditor.ui.ControlPanel;
 import root.iv.imageeditor.util.GlideApp;
 import root.iv.imageeditor.util.ReactiveImageHolder;
 import root.iv.imageeditor.util.StdObserver;
+import root.iv.imageeditor.util.anim.AnimationManager;
 
 public class EditFragment extends Fragment {
     public static final String TAG = "EditFragment";
     private static final String ARG_BITMAP_PATH = "args:bitmap_path";
     private static final String SAVE_IMG_PATH = "save:image_path";
     private static final String SAVE_IMAGE_HOLDER = "save:holder";
+    private static final String RECEIVER_ACTION = "receiver:action";
+    private static final String RESULT_PIXELS = "result:pixels";
     @BindView(R.id.preview)
     ImageView preview;
     private String path;
@@ -45,17 +53,11 @@ public class EditFragment extends Fragment {
     private ReactiveImageHolder holder = null;
     @BindView(R.id.progress)
     ProgressBar progressBar;
+    @BindView(R.id.dynamicLayout)
+    ViewGroup dynamicLayout;
     private StdObserver<ReactiveImageHolder> createHolderObserver = new StdObserver<>(this::successfulHolderCreate, this::stdError);
     private StdObserver<Bitmap> workObserver = new StdObserver<>(this::successfulWorkFinish, this::stdError);
-
-    @OnClick(R.id.buttonAction)
-    public void clickAction() {
-        progressBar.setVisibility(View.VISIBLE);
-        if (holder != null) {
-            holder.brightness(0.5)
-                    .subscribe(workObserver);
-        }
-    }
+    private ControlPanel lightPanel;
 
     @Nullable
     @Override
@@ -92,6 +94,10 @@ public class EditFragment extends Fragment {
             }
 
             ((AppCompatActivity) activity).setSupportActionBar(bottomAppBar);
+            setHasOptionsMenu(true);
+            dynamicLayout.setAlpha(0.0f);
+            lightPanel = new ControlPanel(getLayoutInflater(), dynamicLayout, 0.0, 5.0, 50, 1.0);
+            lightPanel.setListener(v -> applyControlPanel());
         }
 
         return view;
@@ -110,6 +116,49 @@ public class EditFragment extends Fragment {
         outState.putString(SAVE_IMG_PATH, path);
         outState.putSerializable(SAVE_IMAGE_HOLDER, holder);
         App.logI(TAG + " save");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.edit_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_edit_light:
+                if (dynamicLayout.getAlpha() > 0.1) {
+                    hideControlPanel();
+                } else {
+                    visibleControlPanel();
+                }
+                break;
+        }
+        return true;
+    }
+
+    private void visibleControlPanel() {
+        lightPanel.reset();
+        AnimationManager.changeAlpha(dynamicLayout, 1.0f);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dynamicLayout.getLayoutParams();
+        AnimationManager.translate(dynamicLayout, 0, -dynamicLayout.getHeight() - params.topMargin);
+    }
+
+    private void applyControlPanel() {
+        Toast.makeText(getActivity(), String.format(Locale.ENGLISH, "%8.3f", lightPanel.getValue()), Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.VISIBLE);
+        if (holder != null) {
+            holder.brightness(lightPanel.getValue())
+                    .subscribe(workObserver);
+        }
+        hideControlPanel();
+    }
+
+    private void hideControlPanel() {
+        lightPanel.unsibscribe();
+        AnimationManager.changeAlpha(dynamicLayout, 0.0f);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dynamicLayout.getLayoutParams();
+        AnimationManager.translate(dynamicLayout, 0, dynamicLayout.getHeight() + params.topMargin);
     }
 
     public static EditFragment getInstance(@Nullable String bitmapPath) {

@@ -1,13 +1,12 @@
 package root.iv.imageeditor.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import root.iv.imageeditor.R;
@@ -64,6 +63,11 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
     }
 
     @Override

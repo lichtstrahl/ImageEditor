@@ -61,4 +61,10 @@ dependencies {
 
     // Material Design
     implementation "com.google.android.material:material:1.0.0-rc01"
+
+    // Lottie Animation
+    implementation "com.airbnb.android:lottie:3.0.0-beta4"
+
+    // Dynamic Animation
+    implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
 }

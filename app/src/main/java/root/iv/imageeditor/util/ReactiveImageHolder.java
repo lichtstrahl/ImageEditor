@@ -1,9 +1,6 @@
 package root.iv.imageeditor.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.PowerManager;
-import android.text.format.DateUtils;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -49,8 +46,19 @@ public class ReactiveImageHolder implements Serializable {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Bitmap getCurrentBitmap() {
+    public int[] getPixels() {
+        return pixels;
+    }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public Bitmap getCurrentBitmap() {
         return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
     }
 

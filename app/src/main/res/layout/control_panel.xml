@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7C618">
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/seek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/viewSeek"
+        android:layout_alignTop="@id/buttonOK"
+        android:layout_alignBottom="@id/buttonOK"
+        android:layout_margin="@dimen/stdMargin"
+        android:minHeight="20dp"
+        android:maxHeight="20dp"
+        android:max="10"/>
+
+    <TextView
+        android:id="@+id/viewSeek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:layout_alignTop="@id/buttonOK"
+        android:layout_alignBottom="@id/buttonOK"
+        android:layout_toStartOf="@id/buttonOK"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_margin="@dimen/stdMargin"
+        tools:text="4.9"/>
+
+    <Button
+        android:id="@+id/buttonOK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/stdMargin"
+        android:backgroundTint="@android:color/transparent"
+        android:textColor="@android:color/white"
+        android:text="@string/OK"/>
+
+</RelativeLayout>
