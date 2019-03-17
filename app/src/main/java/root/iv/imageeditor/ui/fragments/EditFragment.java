@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -149,6 +150,8 @@ public class EditFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         if (holder != null) {
             holder.brightness(lightPanel.getValue())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(workObserver);
         }
         hideControlPanel();
