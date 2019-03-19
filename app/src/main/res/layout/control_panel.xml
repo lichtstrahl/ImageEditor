@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/height_dynamic_layout"
     android:background="#F7C618">
     <TextView
         android:id="@+id/viewTitle"
@@ -46,7 +46,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_below="@id/viewTitle"
-        android:layout_margin="@dimen/stdMargin"
         android:backgroundTint="@android:color/transparent"
         android:textColor="@android:color/white"
         android:text="@string/OK"/>

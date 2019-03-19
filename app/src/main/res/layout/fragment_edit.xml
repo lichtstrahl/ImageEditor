@@ -24,9 +24,8 @@
     <FrameLayout
         android:id="@+id/dynamicLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_height="@dimen/height_dynamic_layout"
-        android:layout_alignTop="@id/bottomCoordinator"
+        android:layout_height="@dimen/height_dynamic_layout"
+        android:layout_below="@id/mainContent"
         android:layout_margin="@dimen/stdMargin"
         android:background="#AAA">
 
@@ -37,27 +36,27 @@
         android:id="@+id/bottomCoordinator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_bottom_navigation_height"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/buttonAction"
             android:layout_width="@dimen/fab_size"
             android:layout_height="@dimen/fab_size"
-            app:layout_anchor="@id/bottomAppBar"
             android:backgroundTint="@android:color/white"
             android:src="@drawable/ic_favorite"
-            />
+            app:layout_anchor="@id/bottomAppBar" />
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
+            style="@style/Widget.MaterialComponents.BottomAppBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/bottom_appbar_height"
             android:layout_gravity="bottom"
-            style="@style/Widget.MaterialComponents.BottomAppBar"
-            app:title="Заголовок"
-            app:titleTextColor="@color/colorPrimary"
             app:backgroundTint="@color/colorPrimaryDark"
-            app:fabAlignmentMode="center" />
+            app:fabAlignmentMode="center"
+            app:title="Заголовок"
+            app:titleTextColor="@color/colorPrimary" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
