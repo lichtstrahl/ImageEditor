@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +18,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.util.Subscribed;
+import root.iv.imageeditor.util.anim.AnimationManager;
 
 public class ControlPanel implements Subscribed<Consumer<Integer>> {
     @BindView(R.id.seek)
@@ -25,52 +27,29 @@ public class ControlPanel implements Subscribed<Consumer<Integer>> {
     Button buttonOK;
     @BindView(R.id.viewSeek)
     TextView viewSeek;
+    @BindView(R.id.viewTitle)
+    TextView viewTitle;
     private PublishSubject<Integer> currentValue;
+    @Nullable
     private CompositeDisposable disposable;
     private double min;
     private double max;
-    private int count;
+    private double step;
     private double value;
     private int init;
+    private ViewGroup parent;
+    private boolean visible;
+    private LayoutInflater inflater;
+    private View.OnClickListener listener;
 
-    public ControlPanel(LayoutInflater inflater, ViewGroup parent, double min, double max, int count, double init) {
-        View view = inflater.inflate(R.layout.control_panel, parent, true);
-        ButterKnife.bind(this, view);
-        viewSeek.setText("0");
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                currentValue.onNext(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+    public ControlPanel(LayoutInflater inflater, View.OnClickListener listener, double min, double max, double step, double init) {
         this.min = min;
         this.max = max;
-        this.count = count;
-        currentValue = PublishSubject.create();
-        seekBar.setMax(count);
-        double step = (max-min)/count;
+        this.step = step;
         this.init = (int)Math.round((init-min)/step);
-        init();
-    }
-
-    private void init() {
-        disposable = new CompositeDisposable();
-        disposable.add(currentValue.subscribe(this::updateViewValue));
-        seekBar.setProgress(this.init);
-    }
-
-    public void setListener(View.OnClickListener listener) {
-        buttonOK.setOnClickListener(listener);
+        this.visible = false;
+        this.inflater = inflater;
+        this.listener = listener;
     }
 
     /**
@@ -81,26 +60,71 @@ public class ControlPanel implements Subscribed<Consumer<Integer>> {
      */
     @Override
     public void subscribe(Consumer<Integer> listener) {
-        disposable.add(currentValue.subscribe(listener));
+        if (disposable != null) disposable.add(currentValue.subscribe(listener));
     }
 
     @Override
     public void unsibscribe() {
-        disposable.dispose();
-    }
-
-    public void reset() {
-        unsibscribe();
-        init();
+        if (disposable != null) disposable.dispose();
     }
 
     private void updateViewValue(int value) {
-        double step = (max-min)/count;
         this.value = min + value*step;
         viewSeek.setText(String.format(Locale.ENGLISH, "%3.1f", min + value*step));
     }
 
     public double getValue() {
         return value;
+    }
+
+    public void show(ViewGroup parent, double init, String title) {
+        if (!visible) {
+            unsibscribe();
+            visible = true;
+            this.parent = parent;
+            View view = inflater.inflate(R.layout.control_panel, parent, true);
+            ButterKnife.bind(this, view);
+            currentValue = PublishSubject.create();
+            disposable = new CompositeDisposable();
+            disposable.add(currentValue.subscribe(this::updateViewValue));
+            buttonOK.setOnClickListener(listener);
+            int count = (int) Math.round((max-min)/step);
+            seekBar.setMax(count);
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    currentValue.onNext(progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            viewTitle.setText(title);
+            seekBar.setProgress(this.init);
+            viewSeek.setText(String.format(Locale.ENGLISH, "%3.1f", init));
+
+            AnimationManager.changeAlpha(parent, 1.0f);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) parent.getLayoutParams();
+            AnimationManager.translate(parent, 0, -parent.getHeight() - params.topMargin);
+        }
+    }
+
+    public void hide() {
+        if (visible) {
+            visible = false;
+            unsibscribe();
+            parent.removeAllViews();
+            parent.removeAllViewsInLayout();
+            AnimationManager.changeAlpha(parent, 0.0f);
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) parent.getLayoutParams();
+            AnimationManager.translate(parent, 0, parent.getHeight() + params.topMargin);
+        }
     }
 }

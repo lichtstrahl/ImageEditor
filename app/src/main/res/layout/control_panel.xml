@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F7C618">
+    <TextView
+        android:id="@+id/viewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        tools:text="Заголовк"
+        android:layout_centerHorizontal="true"/>
+
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/seek"
@@ -37,9 +45,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:layout_below="@id/viewTitle"
         android:layout_margin="@dimen/stdMargin"
         android:backgroundTint="@android:color/transparent"
         android:textColor="@android:color/white"
         android:text="@string/OK"/>
+
+
+
 
 </RelativeLayout>

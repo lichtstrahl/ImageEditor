@@ -24,8 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -59,6 +57,7 @@ public class EditFragment extends Fragment {
     private StdObserver<ReactiveImageHolder> createHolderObserver = new StdObserver<>(this::successfulHolderCreate, this::stdError);
     private StdObserver<Bitmap> workObserver = new StdObserver<>(this::successfulWorkFinish, this::stdError);
     private ControlPanel lightPanel;
+    private ControlPanel contrastPanel;
 
     @Nullable
     @Override
@@ -97,8 +96,8 @@ public class EditFragment extends Fragment {
             ((AppCompatActivity) activity).setSupportActionBar(bottomAppBar);
             setHasOptionsMenu(true);
             dynamicLayout.setAlpha(0.0f);
-            lightPanel = new ControlPanel(getLayoutInflater(), dynamicLayout, 0.0, 5.0, 50, 1.0);
-            lightPanel.setListener(v -> applyControlPanel());
+            lightPanel =    new ControlPanel(getLayoutInflater(), (v) -> applyLightPanel(), 0.0, 5.0, 0.1, 1.0);
+            contrastPanel = new ControlPanel(getLayoutInflater(), (v) -> applyContrastPanel(), 0.0, 5.0, 0.1, 1.0);
         }
 
         return view;
@@ -126,43 +125,44 @@ public class EditFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (dynamicLayout.getAlpha() > 0.1) {
+            lightPanel.hide();
+            contrastPanel.hide();
+            return true;
+        }
+
+
         switch (item.getItemId()) {
             case R.id.menu_edit_light:
-                if (dynamicLayout.getAlpha() > 0.1) {
-                    hideControlPanel();
-                } else {
-                    visibleControlPanel();
-                }
+                lightPanel.show(dynamicLayout, 1.0, "Яркость");
+                break;
+
+            case R.id.menu_edit_contrast:
+                contrastPanel.show(dynamicLayout, 1.0, "Контраст");
                 break;
         }
         return true;
+
     }
 
-    private void visibleControlPanel() {
-        lightPanel.reset();
-        AnimationManager.changeAlpha(dynamicLayout, 1.0f);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dynamicLayout.getLayoutParams();
-        AnimationManager.translate(dynamicLayout, 0, -dynamicLayout.getHeight() - params.topMargin);
-    }
-
-    private void applyControlPanel() {
+    private void applyLightPanel() {
         Toast.makeText(getActivity(), String.format(Locale.ENGLISH, "%8.3f", lightPanel.getValue()), Toast.LENGTH_SHORT).show();
-        progressBar.setVisibility(View.VISIBLE);
-        if (holder != null) {
-            holder.brightness(lightPanel.getValue())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(workObserver);
-        }
-        hideControlPanel();
+//        progressBar.setVisibility(View.VISIBLE);
+//        if (holder != null) {
+//            holder.brightness(lightPanel.getValue())
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(workObserver);
+//        }
+        lightPanel.hide();
     }
 
-    private void hideControlPanel() {
-        lightPanel.unsibscribe();
-        AnimationManager.changeAlpha(dynamicLayout, 0.0f);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dynamicLayout.getLayoutParams();
-        AnimationManager.translate(dynamicLayout, 0, dynamicLayout.getHeight() + params.topMargin);
+    private void applyContrastPanel() {
+        Toast.makeText(getActivity(), String.format(Locale.ENGLISH, "%8.3f", contrastPanel.getValue()), Toast.LENGTH_SHORT).show();
+        contrastPanel.hide();
     }
+
+
 
     public static EditFragment getInstance(@Nullable String bitmapPath) {
         EditFragment fragment = new EditFragment();

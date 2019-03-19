@@ -6,6 +6,11 @@
         android:id="@+id/menu_edit_light"
         android:title="@string/edit_light"
         android:icon="@drawable/ic_brightness_medium"
-        
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_edit_contrast"
+        android:title="@string/contrast"
+        android:icon="@drawable/ic_contrast"
+        app:showAsAction="ifRoom" />
 </menu>
