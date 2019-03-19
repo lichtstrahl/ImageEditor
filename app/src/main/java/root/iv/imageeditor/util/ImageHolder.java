@@ -70,10 +70,10 @@ public class ImageHolder {
         int j1 = 0;
         int k = 0;
         int kk = 0;
-        int [][] inten = new int [width][height];
+        int [][] inten = new int [height][width];
 
-        while (k < width){
-            while (kk < height) {
+        while (k < height){
+            while (kk < width) {
                 int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * k + kk]);
                 inten[k][kk] = rgb[0] + rgb[1] + rgb[2];
                 kk = kk + 1;
@@ -105,10 +105,10 @@ public class ImageHolder {
                 while (i < lim_width) {
                     j = j0;
                     while (j < lim_height) {
-                        int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * i + j]);
-                        pixels1[i-i0][j-j0][0] = rgb[0];
-                        pixels1[i-i0][j-j0][1] = rgb[1];
-                        pixels1[i-i0][j-j0][2] = rgb[2];
+                        int [] rgb = ImageMatrixCalc.front_conversion(pixels[width * j + i]);
+                        pixels1[j-j0][i-i0][0] = rgb[0];
+                        pixels1[j-j0][i-i0][1] = rgb[1];
+                        pixels1[j-j0][i-i0][2] = rgb[2];
                         j = j + 1;
                     }
                     i = i + 1;
@@ -118,8 +118,8 @@ public class ImageHolder {
                 while (i1 + i0 < lim_width) {
                     j1 = 0;
                     while (j1 + j0 < lim_height) {
-                        int rgb = ImageMatrixCalc.back_conversion(pixels1[i1][j1][0], pixels1[i1][j1][1], pixels1[i1][j1][2]);
-                        pixels[(i1 + i0)*width + (j1 + j0)] = rgb;
+                        int rgb = ImageMatrixCalc.back_conversion(pixels1[j1][i1][0], pixels1[j1][i1][1], pixels1[j1][i1][2]);
+                        pixels[(j1+j0)*width + (i1+i0)] = rgb;
                         j1 = j1 + 1;
                     }
                     i1 = i1 + 1;

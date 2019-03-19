@@ -24,10 +24,11 @@
     <FrameLayout
         android:id="@+id/dynamicLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_dynamic_layout"
+        android:layout_height="match_parent"
         android:layout_below="@id/mainContent"
         android:layout_margin="@dimen/stdMargin"
-        android:background="#AAA">
+        android:background="#AAA"
+        tools:layout_height="match_parent">
 
     </FrameLayout>
 

@@ -7,8 +7,6 @@ import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import root.iv.imageeditor.app.App;
 
 public class ReactiveImageHolder implements Serializable {
@@ -40,6 +38,13 @@ public class ReactiveImageHolder implements Serializable {
                                     ImageHolder.brightness_segm(pixels, width, height, alpha);
                                     return getCurrentBitmap();
                                 });
+    }
+
+    public Single<Bitmap> contrast(double alpha) {
+        return Single.fromCallable(() -> {
+           ImageHolder.contrast_segm(pixels, width, height, alpha);
+           return getCurrentBitmap();
+        });
     }
 
     public int[] getPixels() {
