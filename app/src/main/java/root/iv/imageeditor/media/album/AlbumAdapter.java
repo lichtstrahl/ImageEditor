@@ -1,4 +1,4 @@
-package root.iv.imageeditor.image;
+package root.iv.imageeditor.media.album;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,8 +13,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import root.iv.imageeditor.R;
-import root.iv.imageeditor.util.GlideApp;
-import root.iv.imageeditor.util.Subscribed;
+import root.iv.imageeditor.media.BaseAdapter;
+import root.iv.imageeditor.glide.GlideApp;
+import root.iv.imageeditor.rx.Subscribed;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         implements

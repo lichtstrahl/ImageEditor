@@ -1,4 +1,4 @@
-package root.iv.imageeditor.image;
+package root.iv.imageeditor.media;
 
 public interface BaseAdapter<T> {
     void append(T item);

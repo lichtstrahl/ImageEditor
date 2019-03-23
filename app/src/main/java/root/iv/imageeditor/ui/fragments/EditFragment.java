@@ -1,7 +1,6 @@
 package root.iv.imageeditor.ui.fragments;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -34,9 +32,9 @@ import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.app.App;
 import root.iv.imageeditor.ui.ControlPanel;
-import root.iv.imageeditor.util.GlideApp;
-import root.iv.imageeditor.util.ReactiveImageHolder;
-import root.iv.imageeditor.util.StdObserver;
+import root.iv.imageeditor.glide.GlideApp;
+import root.iv.imageeditor.holder.ReactiveImageHolder;
+import root.iv.imageeditor.rx.StdObserver;
 
 public class EditFragment extends Fragment {
     public static final String TAG = "EditFragment";

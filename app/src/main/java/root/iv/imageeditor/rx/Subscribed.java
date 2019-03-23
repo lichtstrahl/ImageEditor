@@ -1,4 +1,4 @@
-package root.iv.imageeditor.util;
+package root.iv.imageeditor.rx;
 
 public interface Subscribed<T> {
     void subscribe(T listener);

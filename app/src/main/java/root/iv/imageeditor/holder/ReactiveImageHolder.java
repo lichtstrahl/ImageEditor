@@ -1,14 +1,14 @@
-package root.iv.imageeditor.util;
+package root.iv.imageeditor.holder;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 
 import java.io.Serializable;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import io.reactivex.Single;
-import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.app.App;
 
 public class ReactiveImageHolder implements Serializable {
@@ -52,9 +52,18 @@ public class ReactiveImageHolder implements Serializable {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
 
-        options.inSampleSize = calculateInSampleSize(options, reqW, reqH);
+        options.inSampleSize = BitmapProcessor.calculateInSampleSize(options, reqW, reqH);
         options.inJustDecodeBounds = false;
         Bitmap mini = BitmapFactory.decodeFile(path, options);
+
+        ExifInterface exif = null;
+        try {
+             exif = new ExifInterface(path);
+        } catch (Exception e) { }
+        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        mini = BitmapProcessor.rotateBitmap(mini, orientation);
+
+        App.logI("Ориентация: " + orientation);
 
         int w = mini.getWidth();
         int h = mini.getHeight();
@@ -68,25 +77,6 @@ public class ReactiveImageHolder implements Serializable {
                                     ImageHolder.brightness_segm(pixels, width, height, alpha);
                                     return getCurrentBitmap();
                                 });
-    }
-
-    // Подсчет необходимого коэффициента масштабирования
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqW, int reqH) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqH || width > reqW) {
-            inSampleSize *= 2;
-            final int halfHeight = height / inSampleSize;
-            final  int halfWidth = width / inSampleSize;
-
-            while ((halfHeight/inSampleSize) >= reqH && (halfWidth/inSampleSize) >= reqW) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
     }
 
     public Single<Bitmap> contrast(double alpha) {

@@ -1,6 +1,5 @@
-package root.iv.imageeditor.util.anim;
+package root.iv.imageeditor.anim;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
