@@ -5,4 +5,5 @@
     <color name="colorPrimaryDark">#FF9800</color>
     <color name="colorPrimarySelected">#C77B09</color>
     <color name="colorAccent">#4DD0E1</color>
+    <color name="backgroundAlbumName">#8000</color>
 </resources>

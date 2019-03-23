@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mainContent"
-        android:layout_margin="@dimen/stdMargin"
+        android:layout_margin="@dimen/stdSpace"
         android:background="#AAA"
         tools:layout_height="match_parent">
 
@@ -44,8 +44,8 @@
             android:id="@+id/buttonAction"
             android:layout_width="@dimen/fab_size"
             android:layout_height="@dimen/fab_size"
-            android:backgroundTint="@android:color/white"
             android:src="@drawable/ic_favorite"
+            app:backgroundTint="@android:color/white"
             app:layout_anchor="@id/bottomAppBar" />
 
         <com.google.android.material.bottomappbar.BottomAppBar

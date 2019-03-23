@@ -21,7 +21,7 @@
         android:layout_toStartOf="@id/viewSeek"
         android:layout_alignTop="@id/buttonOK"
         android:layout_alignBottom="@id/buttonOK"
-        android:layout_margin="@dimen/stdMargin"
+        android:layout_margin="@dimen/stdSpace"
         android:minHeight="20dp"
         android:maxHeight="20dp"
         android:max="10"/>
@@ -36,7 +36,7 @@
         android:layout_toStartOf="@id/buttonOK"
         android:textAlignment="center"
         android:textSize="20sp"
-        android:layout_margin="@dimen/stdMargin"
+        android:layout_margin="@dimen/stdSpace"
         tools:text="4.9"/>
 
     <Button
@@ -46,7 +46,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_below="@id/viewTitle"
-        android:layout_marginEnd="@dimen/stdMargin"
+        android:layout_marginEnd="@dimen/stdSpace"
         android:backgroundTint="@android:color/transparent"
         android:textColor="@android:color/white"
         android:text="@string/OK"/>
