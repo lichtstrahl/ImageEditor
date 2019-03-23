@@ -3,35 +3,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_margin="@dimen/stdMargin"
-    app:cardCornerRadius="20dp"
-    android:backgroundTint="@color/colorPrimary">
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardUseCompatPadding="true">
 
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/viewAlbumName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/stdMargin"
-            android:maxLines="1"
-            android:maxLength="10"
-            tools:text="@tools:sample/cities"
-            android:layout_centerHorizontal="true"/>
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/viewImageCover"
             android:layout_width="@dimen/bigIcon"
             android:layout_height="@dimen/bigIcon"
-            android:layout_below="@id/viewAlbumName"
-            android:layout_margin="@dimen/stdMargin"
+            android:scaleType="centerCrop"
             tools:src="@tools:sample/avatars"
             android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/viewAlbumName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewImageCover"
+            android:maxLines="1"
+            android:maxLength="10"
+            tools:text="@tools:sample/cities"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
+
 </androidx.cardview.widget.CardView>

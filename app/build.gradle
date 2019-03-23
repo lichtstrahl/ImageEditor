@@ -68,4 +68,10 @@ dependencies {
 
     // Dynamic Animation
     implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
+
+    // Circle ImageView
+    implementation "de.hdodenhof:circleimageview:3.0.0"
+
+    // Rounded ImageView
+    implementation "com.joooonho:selectableroundedimageview:1.0.1"
 }
