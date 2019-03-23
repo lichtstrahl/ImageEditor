@@ -10,9 +10,9 @@ import io.reactivex.Single;
 import root.iv.imageeditor.app.App;
 
 public class ReactiveImageHolder implements Serializable {
-    private int[] pixels;
-    private int width;
-    private int height;
+    private int[] pixels;   //
+    private int width;      //
+    private int height;     //
 
     private ReactiveImageHolder(int[] pxs, int w, int h) {
         pixels = pxs;
