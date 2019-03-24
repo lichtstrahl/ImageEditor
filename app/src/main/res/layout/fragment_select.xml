@@ -23,7 +23,9 @@
         android:id="@+id/viewListAlbums"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/stdSpace"
         android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         toolsList:listitem="@layout/album_item">

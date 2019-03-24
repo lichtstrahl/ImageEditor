@@ -337,7 +337,7 @@ public class MainFunctions {
         return pixels;
     }
 
-    public static int [][] identify_curves(int [][] inten, int width, int height) {
+    public static int [][]  identify_curves(int [][] inten, int width, int height) {
 //        double [][][] F_img = ImageMatrixCalc.dft2(inten);
 //
 //        int n = 0;
@@ -417,7 +417,7 @@ public class MainFunctions {
         return pattern;
     }
 
-    public static int check_curve(int i, int j, int width, int height, int [][] pattern, int toler) {
+    public static int       check_curve(int i, int j, int width, int height, int [][] pattern, int toler) {
         int sum  = 0;
         int ii = i - toler;
         int jj = 0;

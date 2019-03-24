@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- std -->
-    <dimen name="stdMargin">8dp</dimen>
+    <dimen name="stdSpace">8dp</dimen>
 
     <!-- Icon -->
     <dimen name="smallIcon">50dp</dimen>
@@ -27,4 +27,5 @@
     <dimen name="edit_bottom_navigation_height">85dp</dimen>
     <dimen name="progress_size">48dp</dimen>
     <dimen name="height_dynamic_layout">92dp</dimen>
+    <dimen name="cardAlbumCornerRadius">10dp</dimen>
 </resources>

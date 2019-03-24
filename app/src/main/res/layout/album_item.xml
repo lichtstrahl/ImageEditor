@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/stdSpace"
+    android:layout_marginStart="@dimen/stdSpace"
+    android:layout_gravity="center_horizontal"
+    app:cardCornerRadius="@dimen/cardAlbumCornerRadius"
+    app:cardBackgroundColor="@color/colorPrimary">
 
-    <androidx.cardview.widget.CardView
-        android:orientation="vertical"
+
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/stdMargin"
-        app:cardCornerRadius="20dp"
-        android:backgroundTint="@color/colorPrimary">
+        android:layout_height="wrap_content">
+        <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/viewImageCover"
+            android:layout_width="@dimen/bigIcon"
+            android:layout_height="@dimen/bigIcon"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/avatars"
+            app:sriv_border_width="0dp"
+            app:sriv_left_top_corner_radius="@dimen/cardAlbumCornerRadius"
+            app:sriv_right_top_corner_radius="@dimen/cardAlbumCornerRadius"
+            app:sriv_left_bottom_corner_radius="@dimen/cardAlbumCornerRadius"
+            />
 
+        <TextView
+            android:id="@+id/viewAlbumName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/viewImageCover"
+            android:layout_alignStart="@id/viewImageCover"
+            android:layout_alignEnd="@id/viewImageCover"
+            android:background="@color/backgroundAlbumName"
+            android:textColor="@android:color/white"
+            android:textAlignment="center"
+            android:maxLines="1"
+            android:maxLength="10"
+            tools:text="@tools:sample/cities"
+            />
+    </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/viewAlbumName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/stdMargin"
-                android:maxLines="1"
-                android:maxLength="10"
-                tools:text="@tools:sample/cities"
-                android:layout_centerHorizontal="true"/>
-
-            <ImageView
-                android:id="@+id/viewImageCover"
-                android:layout_width="@dimen/bigIcon"
-                android:layout_height="@dimen/bigIcon"
-                android:layout_below="@id/viewAlbumName"
-                android:layout_margin="@dimen/stdMargin"
-                tools:src="@tools:sample/avatars"
-                android:layout_centerHorizontal="true"/>
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-</FrameLayout>
+</androidx.cardview.widget.CardView>

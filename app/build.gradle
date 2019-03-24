@@ -17,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -67,4 +68,10 @@ dependencies {
 
     // Dynamic Animation
     implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
+
+    // Circle ImageView
+    implementation "de.hdodenhof:circleimageview:3.0.0"
+
+    // Rounded ImageView
+    implementation "com.joooonho:selectableroundedimageview:1.0.1"
 }
