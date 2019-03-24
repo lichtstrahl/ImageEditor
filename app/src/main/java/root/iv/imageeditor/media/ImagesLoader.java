@@ -1,4 +1,4 @@
-package root.iv.imageeditor.util;
+package root.iv.imageeditor.media;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import root.iv.imageeditor.app.App;
-import root.iv.imageeditor.image.Image;
-import root.iv.imageeditor.image.Album;
+import root.iv.imageeditor.media.image.Image;
+import root.iv.imageeditor.media.album.Album;
 
 public class ImagesLoader {
     public static List<Album> getImageAlbums(Context context) {
@@ -30,6 +30,7 @@ public class ImagesLoader {
                 int bucketNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME);
                 int imageUriColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 int imageIDColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+
 
                 do {
                     String bucketName = cursor.getString(bucketNameColumn);

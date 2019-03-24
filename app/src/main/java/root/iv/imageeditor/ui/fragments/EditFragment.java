@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -32,10 +32,9 @@ import rapid.decoder.BitmapDecoder;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.app.App;
 import root.iv.imageeditor.ui.ControlPanel;
-import root.iv.imageeditor.util.GlideApp;
-import root.iv.imageeditor.util.ReactiveImageHolder;
-import root.iv.imageeditor.util.StdObserver;
-import root.iv.imageeditor.util.anim.AnimationManager;
+import root.iv.imageeditor.glide.GlideApp;
+import root.iv.imageeditor.holder.ReactiveImageHolder;
+import root.iv.imageeditor.rx.StdObserver;
 
 public class EditFragment extends Fragment {
     public static final String TAG = "EditFragment";
@@ -66,6 +65,10 @@ public class EditFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit, container, false);
         ButterKnife.bind(this, view);
 
+        preview.getViewTreeObserver().addOnDrawListener(() -> {
+            App.logI("OnDraw");
+        });
+
         Bundle args = getArguments();
         Activity activity = this.getActivity();
         if (activity instanceof AppCompatActivity) {
@@ -73,16 +76,16 @@ public class EditFragment extends Fragment {
             if (args != null) { // Было передано изображение
                 path = ARG_BITMAP_PATH;
 
-                Bitmap bitmap = BitmapDecoder.from(args.getString(ARG_BITMAP_PATH)).decode();
                 progressBar.setVisibility(View.VISIBLE);
-                Single.fromCallable(() -> ReactiveImageHolder.getInstance(bitmap))
+
+                DisplayMetrics metrics = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                int width = metrics.widthPixels;
+                int height = metrics.heightPixels * 9 / 10;
+                Single.fromCallable(() -> ReactiveImageHolder.getInstance(args.getString(ARG_BITMAP_PATH), width, height))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(createHolderObserver);
-                GlideApp
-                        .with(activity.getApplicationContext())
-                        .load(bitmap)
-                        .into(preview);
 
             } else {            // Не было передано изображение
                 progressBar.setVisibility(View.GONE);
@@ -97,8 +100,8 @@ public class EditFragment extends Fragment {
             ((AppCompatActivity) activity).setSupportActionBar(bottomAppBar);
             setHasOptionsMenu(true);
             dynamicLayout.setAlpha(0.0f);
-            lightPanel =    new ControlPanel(getLayoutInflater(), (v) -> applyLightPanel(), 0.0, 5.0, 0.1, 1.0);
-            contrastPanel = new ControlPanel(getLayoutInflater(), (v) -> applyContrastPanel(), 0.0, 5.0, 0.1, 1.0);
+            lightPanel =    new ControlPanel(getLayoutInflater(), v -> applyLightPanel(), 0.0, 5.0, 0.1, 1.0);
+            contrastPanel = new ControlPanel(getLayoutInflater(), v -> applyContrastPanel(), 0.0, 5.0, 0.1, 1.0);
         }
 
         return view;
@@ -123,6 +126,8 @@ public class EditFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.edit_fragment, menu);
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -187,6 +192,10 @@ public class EditFragment extends Fragment {
     private void successfulHolderCreate(ReactiveImageHolder holder) {
         progressBar.setVisibility(View.GONE);
         this.holder = holder;
+        GlideApp
+                .with(getActivity().getApplicationContext())
+                .load(holder.getCurrentBitmap())
+                .into(preview);
     }
 
     private void successfulWorkFinish(Bitmap bitmap) {

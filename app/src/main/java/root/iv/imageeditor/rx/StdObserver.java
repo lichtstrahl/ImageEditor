@@ -1,4 +1,4 @@
-package root.iv.imageeditor.util;
+package root.iv.imageeditor.rx;
 
 import androidx.annotation.Nullable;
 import io.reactivex.SingleObserver;

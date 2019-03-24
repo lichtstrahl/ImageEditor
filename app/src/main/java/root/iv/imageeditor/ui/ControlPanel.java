@@ -17,8 +17,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 import root.iv.imageeditor.R;
-import root.iv.imageeditor.util.Subscribed;
-import root.iv.imageeditor.util.anim.AnimationManager;
+import root.iv.imageeditor.rx.Subscribed;
+import root.iv.imageeditor.anim.AnimationManager;
 
 public class ControlPanel implements Subscribed<Consumer<Integer>> {
     @BindView(R.id.seek)

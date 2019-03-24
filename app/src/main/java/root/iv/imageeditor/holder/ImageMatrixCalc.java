@@ -1,4 +1,4 @@
-package root.iv.imageeditor.util;
+package root.iv.imageeditor.holder;
 
 public class ImageMatrixCalc {
     public static int[] front_conversion(int rgb) {

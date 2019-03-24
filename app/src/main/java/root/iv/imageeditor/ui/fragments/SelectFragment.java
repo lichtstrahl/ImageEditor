@@ -18,11 +18,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import root.iv.imageeditor.R;
 import root.iv.imageeditor.app.App;
-import root.iv.imageeditor.image.Album;
-import root.iv.imageeditor.image.AlbumAdapter;
-import root.iv.imageeditor.image.Image;
-import root.iv.imageeditor.image.ImageAdapter;
-import root.iv.imageeditor.util.ImagesLoader;
+import root.iv.imageeditor.media.album.Album;
+import root.iv.imageeditor.media.album.AlbumAdapter;
+import root.iv.imageeditor.media.image.Image;
+import root.iv.imageeditor.media.image.ImageAdapter;
+import root.iv.imageeditor.media.ImagesLoader;
 
 public class SelectFragment extends Fragment {
     private static final String SAVE_POS_ALBUM_SELECTED = "save:pos-last-album-selected";

@@ -1,7 +1,9 @@
-package root.iv.imageeditor.image;
+package root.iv.imageeditor.media.album;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import root.iv.imageeditor.media.image.Image;
 
 public class Album {
     private int id;

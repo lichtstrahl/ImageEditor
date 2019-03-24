@@ -85,4 +85,10 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Li
     private void clearBackStack() {
         while (getSupportFragmentManager().popBackStackImmediate());
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        App.logI("onWindowFocusChanged");
+    }
 }
