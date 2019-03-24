@@ -101,7 +101,7 @@ public class EditFragment extends Fragment {
             setHasOptionsMenu(true);
             dynamicLayout.setAlpha(0.0f);
             lightPanel =    new ControlPanel(getLayoutInflater(), v -> applyLightPanel(), 0.0, 5.0, 0.1, 1.0);
-            contrastPanel = new ControlPanel(getLayoutInflater(), v -> applyContrastPanel(), 0.0, 5.0, 0.1, 1.0);
+            contrastPanel = new ControlPanel(getLayoutInflater(), v -> applyContrastPanel(), -1.0, 1.0, 0.1, 0.0);
         }
 
         return view;
@@ -127,8 +127,6 @@ public class EditFragment extends Fragment {
         inflater.inflate(R.menu.edit_fragment, menu);
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (dynamicLayout.getAlpha() > 0.1) {
@@ -137,18 +135,16 @@ public class EditFragment extends Fragment {
             return true;
         }
 
-
         switch (item.getItemId()) {
             case R.id.menu_edit_light:
-                lightPanel.show(dynamicLayout, 1.0, "Яркость");
+                lightPanel.show(dynamicLayout, "Яркость");
                 break;
 
             case R.id.menu_edit_contrast:
-                contrastPanel.show(dynamicLayout, 1.0, "Контраст");
+                contrastPanel.show(dynamicLayout, "Контраст");
                 break;
         }
         return true;
-
     }
 
     private void applyLightPanel() {

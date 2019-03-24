@@ -60,6 +60,8 @@ public class ReactiveImageHolder implements Serializable {
         try {
              exif = new ExifInterface(path);
         } catch (Exception e) { }
+        // [i][j] ==> [i*width + j]
+
         int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
         mini = BitmapProcessor.rotateBitmap(mini, orientation);
 

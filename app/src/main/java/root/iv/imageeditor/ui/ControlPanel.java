@@ -77,7 +77,7 @@ public class ControlPanel implements Subscribed<Consumer<Integer>> {
         return value;
     }
 
-    public void show(ViewGroup parent, double init, String title) {
+    public void show(ViewGroup parent, String title) {
         if (!visible) {
             unsibscribe();
             visible = true;
@@ -108,7 +108,7 @@ public class ControlPanel implements Subscribed<Consumer<Integer>> {
             });
             viewTitle.setText(title);
             seekBar.setProgress(this.init);
-            viewSeek.setText(String.format(Locale.ENGLISH, "%3.1f", init));
+            viewSeek.setText(String.format(Locale.ENGLISH, "%3.1f", min+init*step));
 
             AnimationManager.changeAlpha(parent, 1.0f);
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) parent.getLayoutParams();
